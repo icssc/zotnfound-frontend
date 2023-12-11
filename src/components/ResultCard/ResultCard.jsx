@@ -14,7 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { InfoIcon } from "@chakra-ui/icons";
 import InfoModal from "../InfoModal/InfoModal.jsx";
-import { formatDate } from "../../utils.js";
+import { formatDate } from "../../utils/dateUtils.js";
 import locate from "../../assets/logos/locate.svg";
 
 export default function ResultCard({
