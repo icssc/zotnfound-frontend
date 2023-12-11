@@ -12,7 +12,7 @@ import {
   Tag,
   useDisclosure,
 } from "@chakra-ui/react";
-import { formatDate } from "../../utils/dateUtils";
+import { formatDate } from "../../utils/utils";
 import { UserAuth } from "../../context/AuthContext";
 import DataContext from "../../context/DataContext";
 import ImageContainer from "../ImageContainer/ImageContainer";
