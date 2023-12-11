@@ -1,0 +1,19 @@
+.popup {
+  cursor: pointer;
+}
+
+.map-container {
+  height: 80vh;
+  width: 75vw;
+  border-radius: 30px;
+  z-index: 0;
+}
+
+@media only screen and (max-width: 600px) {
+  .map-container {
+    border-radius: 0;
+    height: 83vh;
+    width: 100vw;
+    z-index: 0;
+  }
+}
