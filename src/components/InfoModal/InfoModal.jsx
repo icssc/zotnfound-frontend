@@ -107,7 +107,7 @@ export default function InfoModal({
   const foundDateText = (
     <Text color={"gray.500"}> Found on {props.itemdate}</Text>
   )
-  
+
   const viewContactButton = (
     <Button
     colorScheme="blue"
@@ -227,7 +227,6 @@ export default function InfoModal({
                   "dangnn1@uci.edu",
                   "stevenz9@uci.edu",
                   "katyh1@uci.edu",
-                  "ttsundue@uci.edu" // DELETE THIS BEFORE DEPLOYMENT
                 ].includes(currentEmail) && (
                   <Button
                     colorScheme="red"
