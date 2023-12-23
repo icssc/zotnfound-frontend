@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useCallback } from "react";
 import {
   Modal,
   ModalOverlay,
@@ -28,14 +28,51 @@ export default function LoginModal() {
   const [isAttempt, setIsAttempt] = useState(false);
   const { googleSignIn, user } = UserAuth();
 
-  async function signInGoogle() {
+  // async function signInGoogle() {
+  //   try {
+  //     await googleSignIn();
+  //   } catch (error) {
+  //     console.log(error.message);
+  //   }
+  // }
+
+  const signInGoogle = useCallback(async () => {
     try {
       await googleSignIn();
     } catch (error) {
       console.log(error.message);
     }
-  }
+  }, [googleSignIn]);
 
+  const handleSignInGoogle = useCallback(() => {
+    signInGoogle();
+    setTimeout(() => {
+      setIsAttempt((prev) => true);
+    }, 5000);
+  }, [signInGoogle]);
+
+  const signInErrorAlert = (
+    <Alert
+    status="error"
+    justifyContent={"center"}
+    flexDir={"column"}
+    gap={2}
+    >
+      <Flex>
+        <AlertIcon />
+        <AlertTitle>Can't sign in?</AlertTitle>
+      </Flex>
+      <AlertDescription>
+        Please sign in with @uci.edu
+      </AlertDescription>
+    </Alert>
+  )
+
+  const welcomeMessage = (
+    <Text fontSize="2xl" as="b">
+      Welcome back Anteater!
+    </Text>
+  )
   return (
     <>
       <Modal
@@ -59,33 +96,9 @@ export default function LoginModal() {
               gap={8}
             >
               <Image src={small_logo} width="15vh" />
-              {isAttempt ? (
-                <Alert
-                  status="error"
-                  justifyContent={"center"}
-                  flexDir={"column"}
-                  gap={2}
-                >
-                  <Flex>
-                    <AlertIcon />
-                    <AlertTitle>Can't sign in?</AlertTitle>
-                  </Flex>
-                  <AlertDescription>
-                    Please sign in with @uci.edu
-                  </AlertDescription>
-                </Alert>
-              ) : (
-                <Text fontSize="2xl" as="b">
-                  Welcome back Anteater!
-                </Text>
-              )}
+              {isAttempt ? (signInErrorAlert) : (welcomeMessage)}
               <Button
-                onClick={() => {
-                  signInGoogle();
-                  setTimeout(() => {
-                    setIsAttempt((prev) => true);
-                  }, 5000);
-                }}
+                onClick={handleSignInGoogle}
                 variant={"outline"}
                 colorScheme="darkblue"
                 size="lg"
