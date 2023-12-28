@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 import {
   Switch,
@@ -29,6 +29,53 @@ export default function Filter({ findFilter, setFindFilter, onClose, isOpen }) {
     setFindFilter((prev) => ({ ...prev, type: value }));
   }, [value]);
 
+  const handleIsLost = useCallback(() => {
+    setFindFilter((prev) => ({
+      ...prev,
+      islost: !prev.islost,
+    }));
+  }, []);
+
+  const handleIsFound = useCallback(() => {
+    setFindFilter((prev) => ({
+      ...prev,
+      isFound: !prev.isFound,
+    }))
+  }, [])
+
+  const handleIsShowReturned = useCallback(() => {
+    setFindFilter((prev) => ({
+      ...prev,
+      isShowReturned: !prev.isShowReturned,
+    }));
+  }, [])
+
+  const handleIsYourPosts = useCallback(() => {
+    setFindFilter((prev) => ({
+      ...prev,
+      isYourPosts: !prev.isYourPosts,
+    }));
+  }, [])
+
+  const handleUploadDate = useCallback((e) => {
+    setFindFilter((prev) => ({
+      ...prev,
+      uploadDate: e.target.value,
+    }));
+  })
+  
+  const handleCancel = useCallback(() => {
+    setFindFilter({
+      type: "everything",
+      isFound: true,
+      islost: true,
+      uploadDate: "",
+      isYourPosts: false,
+      isShowReturned: true,
+    });
+    onClose();
+  }, [])
+  
   return (
     <>
       <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
@@ -44,12 +91,7 @@ export default function Filter({ findFilter, setFindFilter, onClose, isOpen }) {
                     colorScheme="red"
                     size="lg"
                     defaultChecked={findFilter.islost}
-                    onChange={() => {
-                      setFindFilter((prev) => ({
-                        ...prev,
-                        islost: !prev.islost,
-                      }));
-                    }}
+                    onChange={handleIsLost}
                   />
                   <Text mb="0px" ml="50px" fontSize="xl">
                     Lost
@@ -60,12 +102,7 @@ export default function Filter({ findFilter, setFindFilter, onClose, isOpen }) {
                   <Switch
                     colorScheme="green"
                     size="lg"
-                    onChange={() => {
-                      setFindFilter((prev) => ({
-                        ...prev,
-                        isFound: !prev.isFound,
-                      }));
-                    }}
+                    onChange={handleIsFound}
                     defaultChecked={findFilter.isFound}
                   />
                   <Text mb="0px" ml="50px" fontSize="xl">
@@ -76,12 +113,7 @@ export default function Filter({ findFilter, setFindFilter, onClose, isOpen }) {
                   <Switch
                     colorScheme="yellow"
                     size="lg"
-                    onChange={() => {
-                      setFindFilter((prev) => ({
-                        ...prev,
-                        isShowReturned: !prev.isShowReturned,
-                      }));
-                    }}
+                    onChange={handleIsShowReturned}
                     defaultChecked={findFilter.isShowReturned}
                   />
                   <Text mb="0px" ml="50px" fontSize="xl">
@@ -95,12 +127,7 @@ export default function Filter({ findFilter, setFindFilter, onClose, isOpen }) {
                     size="lg"
                     defaultChecked={findFilter.isYourPosts}
                     isDisabled={!user}
-                    onChange={() => {
-                      setFindFilter((prev) => ({
-                        ...prev,
-                        isYourPosts: !prev.isYourPosts,
-                      }));
-                    }}
+                    onChange={handleIsYourPosts}
                   />
                   <Text
                     mb="0px"
@@ -152,12 +179,7 @@ export default function Filter({ findFilter, setFindFilter, onClose, isOpen }) {
                   Found/Lost Date:
                 </Text>
                 <Input
-                  onChange={(e) => {
-                    setFindFilter((prev) => ({
-                      ...prev,
-                      uploadDate: e.target.value,
-                    }));
-                  }}
+                  onChange={handleUploadDate}
                   mt="10px"
                   type="date"
                   value={findFilter.uploadDate}
@@ -170,17 +192,7 @@ export default function Filter({ findFilter, setFindFilter, onClose, isOpen }) {
             <Button
               variant="outline"
               mr={3}
-              onClick={() => {
-                setFindFilter({
-                  type: "everything",
-                  isFound: true,
-                  islost: true,
-                  uploadDate: "",
-                  isYourPosts: false,
-                  isShowReturned: true,
-                });
-                onClose();
-              }}
+              onClick={handleCancel}
             >
               Cancel
             </Button>
