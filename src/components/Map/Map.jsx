@@ -25,6 +25,26 @@ import { UserAuth } from "../../context/AuthContext";
 
 import axios from "axios";
 
+/**
+ * Map is uses react-leaflet's API to communicate user actions to map entities and information
+ *
+ * @component
+ *
+ *
+ * @prop {number[]} focusLocation - coordinates to move map view to and zoom in on
+ * @prop {string} search - search bar query
+ * @prop {boolean} isEdit - if in Edit mode (i.e. user is trying to create a marker)
+ * ! (currently reversed) @prop {boolean} isCreate - if in Create mode
+ * @prop {LatLng || number[]} position - LatLng object for the latitude and longitude coordinates of newAddedItem marker position (default: number array of center coordinates)
+ * @prop {object} newAddedItem - updates as user adds new item information on {@link CreateModal}
+ * @prop {number} centerPosition - center of map coordinates
+ * @prop {object} findFilter - search filters
+ *
+ *
+ *
+ * @returns {JSX.Element} React component
+ */
+
 export default function Map({
   isEdit,
   newAddedItem,
@@ -43,12 +63,19 @@ export default function Map({
   setUploadImg,
   setLeaderboard,
 }) {
+  // Contexts
   const { user } = UserAuth();
   const { data, setLoading, token } = useContext(DataContext);
+
+  // State: isOpen - if InfoModal is open
   const { isOpen, onOpen, onClose } = useDisclosure();
+  // State: itemData - currently selected item
+  // ! (doesn't erase when clicked off of previously selected item)
   const [itemData, setItemData] = useState({});
+  // State: showDonut - if red ring around selected marker shows
   const [showDonut, setShowDonut] = useState(false);
 
+  // Allowed boundaries of markers (currently UCI borders)
   const allowedBounds = [
     [33.656487295651, -117.85412222020983],
     [33.65580858123096, -117.82236486775658],
