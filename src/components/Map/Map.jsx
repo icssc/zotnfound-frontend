@@ -42,7 +42,7 @@ import axios from "axios";
  *
  *
  *
- * @returns {JSX.Element} React component
+ * @returns {JSX.Element} Leaflet Map component
  */
 
 export default function Map({
@@ -85,24 +85,24 @@ export default function Map({
   const bounds = L.latLngBounds(allowedBounds);
 
   // logs
-  useEffect(() => {
-    console.log({
-      data,
-      isEdit,
-      newAddedItem,
-      search,
-      findFilter,
-      isCreate,
-      centerPosition,
-      position,
-      focusLocation,
-      user,
-      token,
-      isOpen,
-      itemData,
-      showDonut,
-    });
-  });
+  // useEffect(() => {
+  //   console.log({
+  //     data,
+  //     isEdit,
+  //     newAddedItem,
+  //     search,
+  //     findFilter,
+  //     isCreate,
+  //     centerPosition,
+  //     position,
+  //     focusLocation,
+  //     user,
+  //     token,
+  //     isOpen,
+  //     itemData,
+  //     showDonut,
+  //   });
+  // });
 
   const handleMarkerSelect = async () => {
     setShowDonut(true);
@@ -158,14 +158,15 @@ export default function Map({
       );
     });
 
-  function Test({ location }) {
+  // moves map when focusLocation state changes
+  function MapFocusLocation({ location }) {
     const map = useMap();
     if (location) {
       map.flyTo(location, 18);
     }
 
     return location ? (
-      <Marker position={location} icon={flyImg}></Marker>
+      <Marker position={location} icon={flyImg}></Marker> // ? there is no fly image??
     ) : null;
   }
 
@@ -344,7 +345,9 @@ export default function Map({
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {!isEdit && <Test location={focusLocation} search={search} />}
+        {!isEdit && (
+          <MapFocusLocation location={focusLocation} search={search} />
+        )}
         {!isEdit}
         {!isEdit && allMarkers}
 
