@@ -86,13 +86,6 @@ export default function CreateModal({
     });
   }, [newAddedItem.image, setUploadImg, setNewAddedItem, setIsLoading]);
 
-  useEffect(() => {
-    if (newAddedItem.image && typeof newAddedItem.image !== "string") {
-      setIsLoading(true);
-      uploadFile();
-    }
-  }, [newAddedItem.image, uploadFile]);
-
   const [date, setDate] = useState(new Date());
 
   const steps = [
@@ -108,64 +101,242 @@ export default function CreateModal({
     count: steps.length,
   });
 
+  // Define the callback function to handle a 'List an item' button click
+  const handleListItemButtonClick = useCallback(() => {
+    if (user) {
+      onOpen();
+      setNewAddedItem((prev) => ({ ...prev, islost: true }));
+      setIsEdit(!isEdit);
+    } else {
+      onLoginModalOpen();
+    }
+  }, [user, onOpen, onLoginModalOpen, setNewAddedItem, isEdit, setIsEdit]);
+
+  // Define the JSX for the 'List an item' button
+  const listItemButton = (
+    <Button
+      // h={{ base: "10vh", md: "7vh" }}
+      // w={{ base: "40vw", md: "" }}
+      boxShadow="xl"
+      _hover={{ bg: "#b4dbd9" }}
+      backgroundColor="#33b249"
+      color="white"
+      fontSize="xl"
+      fontWeight="bold"
+      borderRadius={30}
+      size={"lg"}
+      paddingY={{ base: 10, md: 8 }}
+      onClick={handleListItemButtonClick}
+    >
+      <Text>List an item</Text>
+    </Button>
+  );
+
+  // Define the JSX for the 'Cancel (listing an item)' button
+  const cancelListItemButton = (
+    <Button
+      h={{ base: "8vh", md: "7vh" }}
+      w={{ base: "40vw", md: "8vw" }}
+      _hover={{ bg: "#F4C2C2" }}
+      backgroundColor="#B31B1B"
+      color="white"
+      fontSize="xl"
+      fontWeight="bold"
+      borderRadius={20}
+      onClick={() => {
+        setNewAddedItem({
+          image: "",
+          type: "",
+          islost: true,
+          name: "",
+          description: "",
+          itemdate: "",
+          isresolved: false,
+          ishelped: null,
+        });
+        setUploadImg("");
+        setActiveStep(0);
+        setIsCreate(true);
+        setIsEdit(false);
+        onClose();
+      }}
+    >
+      Cancel
+    </Button>
+  );
+
+  // Define the JSX for the loading animation while an image is uploading
+  const loadingAnimation = (
+    <Flex
+      width={{ md: "10vw", base: "10vh" }}
+      height={{ md: "10vw", base: "10vh" }}
+      bg="gray"
+      opacity="0.8"
+      justifyContent="center"
+      alignItems="center"
+      zIndex={1000000000}
+    >
+      <Spinner
+        thickness="4px"
+        speed="0.65s"
+        emptyColor="yellow"
+        color="blue"
+        size="xl"
+      />
+    </Flex>
+  );
+
+  // Define the JSX for the uploaded image
+  const uploadedImage = (
+    <Image
+      width={{ md: "40%", base: "80%" }}
+      src={uploadImg === "" ? img_placeholder : uploadImg}
+    />
+  );
+
+  // Define the callback function to increment the active step count
+  const handleStepIncrement = useCallback(() => {
+    setActiveStep((prevStep) => prevStep + 1);
+  }, [setActiveStep]);
+
+  // Define the callback function to decrement the active step count
+  const handleStepDecrement = useCallback(() => {
+    setActiveStep((prevStep) => prevStep - 1);
+  }, [setActiveStep]);
+
+  // Define the JSX for the 'Back' button in the modal
+  const backModalButton = (
+    <Button
+      variant={"solid"}
+      colorScheme="red"
+      size="lg"
+      onClick={handleStepDecrement}
+    >
+      Back
+    </Button>
+  );
+
+  // Define the JSX for the 'Cancel' button in the modal
+  const cancelModalButton = (
+    <Button
+      colorScheme="red"
+      size="lg"
+      onClick={() => {
+        setIsEdit(!isEdit);
+        setNewAddedItem({
+          image: "",
+          type: "",
+          islost: true,
+          name: "",
+          description: "",
+          itemdate: "",
+          isresolved: false,
+          ishelped: null,
+        });
+        setUploadImg("");
+        onClose();
+      }}
+    >
+      Cancel
+    </Button>
+  );
+
+  // Define the JSX for the 'Continue (without submitting)' button in the modal
+  const continueModalButton = (
+    <Button
+      isDisabled={
+        (activeStep === 0 && newAddedItem.name === "") ||
+        newAddedItem.description === "" ||
+        (activeStep === 1 && newAddedItem.type === "") ||
+        (activeStep === 2 && newAddedItem.itemdate === "") ||
+        (activeStep === 3 && uploadImg === "")
+      }
+      variant={"solid"}
+      colorScheme="blue"
+      size="lg"
+      onClick={handleStepIncrement}
+    >
+      Continue
+    </Button>
+  );
+
+  // Define the JSX for the 'Continue (and submit)' button in the modal
+  const submitModalButton = (
+    <Button
+      isDisabled={
+        uploadImg === upload ||
+        newAddedItem.image === "" ||
+        newAddedItem.type === "" ||
+        newAddedItem.name === "" ||
+        newAddedItem.description === ""
+      }
+      variant={"solid"}
+      type="submit"
+      colorScheme="green"
+      size="lg"
+      onClick={() => {
+        onClose();
+        setActiveStep(0);
+        setIsCreate(false);
+      }}
+    >
+      Continue
+    </Button>
+  );
+
+  // Define the callback function to change the item date
+  const handleItemDateChange = useCallback(
+    (e) => {
+      setDate(e);
+      setNewAddedItem((prev) => ({
+        ...prev,
+        itemdate: e.toISOString().split("T")[0],
+      }));
+    },
+    [setNewAddedItem]
+  );
+
+  // Define the callback function to change the item name
+  const handleItemNameChange = useCallback(
+    (e) =>
+      setNewAddedItem((prev) => ({
+        ...prev,
+        name: e.target.value,
+      })),
+    [setNewAddedItem]
+  );
+
+  // Define the callback function to change the item description
+  const handleItemDescriptionChange = useCallback(
+    (e) =>
+      setNewAddedItem((prev) => ({
+        ...prev,
+        description: e.target.value,
+      })),
+    [setNewAddedItem]
+  );
+
+  // Define the callback function to change the item image
+  const handleItemImageChange = useCallback(
+    (e) => {
+      setNewAddedItem((prev) => ({
+        ...prev,
+        image: e.target.files[0],
+      }));
+    },
+    [setNewAddedItem]
+  );
+
+  useEffect(() => {
+    if (newAddedItem.image && typeof newAddedItem.image !== "string") {
+      setIsLoading(true);
+      uploadFile();
+    }
+  }, [newAddedItem.image, uploadFile]);
+
   return (
     <>
-      {isCreate ? (
-        <Button
-          // h={{ base: "10vh", md: "7vh" }}
-          // w={{ base: "40vw", md: "" }}
-          boxShadow="xl"
-          _hover={{ bg: "#b4dbd9" }}
-          backgroundColor="#33b249"
-          color="white"
-          fontSize="xl"
-          fontWeight="bold"
-          borderRadius={30}
-          size={"lg"}
-          paddingY={{ base: 10, md: 8 }}
-          onClick={() => {
-            if (user) {
-              onOpen();
-              setNewAddedItem((prev) => ({ ...prev, islost: true }));
-              setIsEdit(!isEdit);
-            } else {
-              onLoginModalOpen();
-            }
-          }}
-        >
-          <Text>List an item</Text>
-        </Button>
-      ) : (
-        <Button
-          h={{ base: "8vh", md: "7vh" }}
-          w={{ base: "40vw", md: "8vw" }}
-          _hover={{ bg: "#F4C2C2" }}
-          backgroundColor="#B31B1B"
-          color="white"
-          fontSize="xl"
-          fontWeight="bold"
-          borderRadius={20}
-          onClick={() => {
-            setNewAddedItem({
-              image: "",
-              type: "",
-              islost: true,
-              name: "",
-              description: "",
-              itemdate: "",
-              isresolved: false,
-              ishelped: null,
-            });
-            setUploadImg("");
-            setActiveStep(0);
-            setIsCreate(true);
-            setIsEdit(false);
-            onClose();
-          }}
-        >
-          Cancel
-        </Button>
-      )}
+      {isCreate ? listItemButton : cancelListItemButton}
       <Modal
         isOpen={isOpen}
         onClose={() => {
@@ -238,12 +409,7 @@ export default function CreateModal({
                         mb={5}
                         border="2px solid gray"
                         value={newAddedItem.name}
-                        onChange={(e) =>
-                          setNewAddedItem((prev) => ({
-                            ...prev,
-                            name: e.target.value,
-                          }))
-                        }
+                        onChange={handleItemNameChange}
                       />
                       <FormLabel fontSize="2xl">
                         📝Description of Item:
@@ -255,12 +421,7 @@ export default function CreateModal({
                         size="lg"
                         border="2px solid gray"
                         value={newAddedItem.description}
-                        onChange={(e) =>
-                          setNewAddedItem((prev) => ({
-                            ...prev,
-                            description: e.target.value,
-                          }))
-                        }
+                        onChange={handleItemDescriptionChange}
                         rows="5"
                       />
                     </FormControl>
@@ -342,13 +503,7 @@ export default function CreateModal({
                       <Calendar
                         className={"react-calendar"}
                         calendarType="US"
-                        onChange={(e) => {
-                          setDate(e);
-                          setNewAddedItem((prev) => ({
-                            ...prev,
-                            itemdate: e.toISOString().split("T")[0],
-                          }));
-                        }}
+                        onChange={handleItemDateChange}
                         value={date}
                       />
                     </Flex>
@@ -380,41 +535,13 @@ export default function CreateModal({
                               fontWeight: "bold",
                             },
                           }}
-                          onChange={(e) => {
-                            setNewAddedItem((prev) => ({
-                              ...prev,
-                              image: e.target.files[0],
-                            }));
-                          }}
+                          onChange={handleItemImageChange}
                         />
 
                         {/* <Button onClick={uploadFile}>Confirm</Button> */}
                       </Flex>
 
-                      {isLoading ? (
-                        <Flex
-                          width={{ md: "10vw", base: "10vh" }}
-                          height={{ md: "10vw", base: "10vh" }}
-                          bg="gray"
-                          opacity="0.8"
-                          justifyContent="center"
-                          alignItems="center"
-                          zIndex={1000000000}
-                        >
-                          <Spinner
-                            thickness="4px"
-                            speed="0.65s"
-                            emptyColor="yellow"
-                            color="blue"
-                            size="xl"
-                          />
-                        </Flex>
-                      ) : (
-                        <Image
-                          width={{ md: "40%", base: "80%" }}
-                          src={uploadImg === "" ? img_placeholder : uploadImg}
-                        />
-                      )}
+                      {isLoading ? loadingAnimation : uploadedImage}
                     </Flex>
                   </FormControl>
                 )}
@@ -527,80 +654,8 @@ export default function CreateModal({
               </Flex>
 
               <Flex justifyContent={"center"} gap="3%">
-                {activeStep > 0 ? (
-                  <Button
-                    variant={"solid"}
-                    colorScheme="red"
-                    size="lg"
-                    onClick={() => {
-                      setActiveStep((prevStep) => prevStep - 1);
-                    }}
-                  >
-                    Back
-                  </Button>
-                ) : (
-                  <Button
-                    colorScheme="red"
-                    size="lg"
-                    onClick={() => {
-                      setIsEdit(!isEdit);
-                      setNewAddedItem({
-                        image: "",
-                        type: "",
-                        islost: true,
-                        name: "",
-                        description: "",
-                        itemdate: "",
-                        isresolved: false,
-                        ishelped: null,
-                      });
-                      setUploadImg("");
-                      onClose();
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                )}
-                {activeStep < 4 ? (
-                  <Button
-                    isDisabled={
-                      (activeStep === 0 && newAddedItem.name === "") ||
-                      newAddedItem.description === "" ||
-                      (activeStep === 1 && newAddedItem.type === "") ||
-                      (activeStep === 2 && newAddedItem.itemdate === "") ||
-                      (activeStep === 3 && uploadImg === "")
-                    }
-                    variant={"solid"}
-                    colorScheme="blue"
-                    size="lg"
-                    onClick={() => {
-                      setActiveStep((prevStep) => prevStep + 1);
-                    }}
-                  >
-                    Continue
-                  </Button>
-                ) : (
-                  <Button
-                    isDisabled={
-                      uploadImg === upload ||
-                      newAddedItem.image === "" ||
-                      newAddedItem.type === "" ||
-                      newAddedItem.name === "" ||
-                      newAddedItem.description === ""
-                    }
-                    variant={"solid"}
-                    type="submit"
-                    colorScheme="green"
-                    size="lg"
-                    onClick={() => {
-                      onClose();
-                      setActiveStep(0);
-                      setIsCreate(false);
-                    }}
-                  >
-                    Continue
-                  </Button>
-                )}
+                {activeStep > 0 ? backModalButton : cancelModalButton}
+                {activeStep < 4 ? continueModalButton : submitModalButton}
               </Flex>
             </Flex>
           </ModalContent>
