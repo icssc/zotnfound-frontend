@@ -51,6 +51,19 @@ export default function ResultsBar({
       );
     });
 
+  const noResults = (
+    <Flex
+      height="80%"
+      width="100%"
+      justifyContent="center"
+      alignItems="center"
+    >
+      <Text fontSize="4xl" as="b" color="gray">
+        No Items
+      </Text>
+    </Flex>
+  )
+
   return (
     <Box
       paddingX="5px"
@@ -59,20 +72,7 @@ export default function ResultsBar({
       overflowY="scroll"
       overflowX={"hidden"}
     >
-      {allResults.length > 0 ? (
-        allResults
-      ) : (
-        <Flex
-          height="80%"
-          width="100%"
-          justifyContent="center"
-          alignItems="center"
-        >
-          <Text fontSize="4xl" as="b" color="gray">
-            No Items
-          </Text>
-        </Flex>
-      )}
+      {allResults.length > 0 ? allResults : noResults}
     </Box>
   );
 }
