@@ -1,5 +1,15 @@
+import { useCallback } from "react";
 import { Flex, Text } from "@chakra-ui/react";
+
 export default function LostFoundSwitch({ newAddedItem, setNewAddedItem }) {
+  // Define the callback function to toggle isLost
+  const handleStatusToggle = useCallback(() => {
+    setNewAddedItem((prev) => ({
+      ...prev,
+      islost: !prev.islost,
+    }));
+  }, [setNewAddedItem]);
+
   // Define the JSX for the 'Lost' button
   const lostButton = (
     <Flex
@@ -8,12 +18,7 @@ export default function LostFoundSwitch({ newAddedItem, setNewAddedItem }) {
       color="white"
       borderRadius={"full"}
       justifyContent="space-between"
-      onClick={() =>
-        setNewAddedItem((prev) => ({
-          ...prev,
-          islost: !prev.islost,
-        }))
-      }
+      onClick={handleStatusToggle}
     >
       <Flex justifyContent={"center"} py={5} w={"60%"}>
         <Text fontSize="2xl">LOST💔</Text>
@@ -35,12 +40,7 @@ export default function LostFoundSwitch({ newAddedItem, setNewAddedItem }) {
       color="white"
       borderRadius={"full"}
       justifyContent="space-between"
-      onClick={() =>
-        setNewAddedItem((prev) => ({
-          ...prev,
-          islost: !prev.islost,
-        }))
-      }
+      onClick={handleStatusToggle}
     >
       <Flex
         width={"40%"}
