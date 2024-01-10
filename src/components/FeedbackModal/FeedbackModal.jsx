@@ -25,10 +25,6 @@ export default function FeedbackModal({
   const [feedbackHelped, setFeedbackHelped] = useState(null);
   const { setLoading, token } = useContext(DataContext);
 
-  const handleAxiosResponseItem = useCallback(() => {
-    console.log("Success")
-  }, []);
-
   const handleFeedback = useCallback(async () => {
     if (!token) {
         return;
@@ -49,7 +45,7 @@ export default function FeedbackModal({
             },
           }
         )
-        .then(handleAxiosResponseItem)
+        .then(console.log("Success"))
         .catch((err) => console.log(err));
   
       setData((prevItems) => {
@@ -88,7 +84,7 @@ export default function FeedbackModal({
     );
 
     setLoading(true);
-  }, [token, setLoading, props, feedbackHelped, handleAxiosResponseItem, setData, email, setLeaderboard]);
+  }, [token, setLoading, props, feedbackHelped, setData, email, setLeaderboard]);
 
   const handleNoButtonClick = useCallback(() => {
     setFeedbackHelped(false);
