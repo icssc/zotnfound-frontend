@@ -84,26 +84,6 @@ export default function Map({
   ];
   const bounds = L.latLngBounds(allowedBounds);
 
-  // logs
-  // useEffect(() => {
-  //   console.log({
-  //     data,
-  //     isEdit,
-  //     newAddedItem,
-  //     search,
-  //     findFilter,
-  //     isCreate,
-  //     centerPosition,
-  //     position,
-  //     focusLocation,
-  //     user,
-  //     token,
-  //     isOpen,
-  //     itemData,
-  //     showDonut,
-  //   });
-  // });
-
   const handleMarkerSelect = async () => {
     setShowDonut(true);
     await new Promise((resolve) => setTimeout(resolve, 2000));
