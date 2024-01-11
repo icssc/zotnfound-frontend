@@ -44,6 +44,7 @@ export default function LoginModal() {
     }
   }, [googleSignIn]);
 
+  // Google sign-in functionality - redirects to Google sign-in page
   const handleSignInGoogle = useCallback(() => {
     signInGoogle();
     setTimeout(() => {
@@ -51,6 +52,7 @@ export default function LoginModal() {
     }, 5000);
   }, [signInGoogle]);
 
+  // The sign-in error alert - appears when user tries to sign in with non-UCI email
   const signInErrorAlert = (
     <Alert
     status="error"
@@ -67,7 +69,8 @@ export default function LoginModal() {
       </AlertDescription>
     </Alert>
   )
-
+  
+  // The welcome message text - appears when user successfully signs in (AKA user has an @uci.edu email)
   const welcomeMessage = (
     <Text fontSize="2xl" as="b">
       Welcome back Anteater!

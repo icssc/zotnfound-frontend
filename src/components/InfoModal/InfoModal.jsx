@@ -46,7 +46,7 @@ export default function InfoModal({
     if (!currentEmail) {
       return;
     }
-    deleteItem(props, token);
+    deleteItem(props, token); // delete item from database
     setData((prevItems) => {
       if (prevItems && prevItems.length > 0) {
         return prevItems.filter((item) => item.id !== props.id);
@@ -56,11 +56,13 @@ export default function InfoModal({
     setLoading(true);
   }
 
+  // Closes the Modal component and navigates back to the home page
   const handleClose = useCallback(() => {
     onClose();
     navigate("/");
   }, [onClose, navigate])
   
+  // Reveals the email of the user who posted the item
   const handleShowEmail = useCallback(() => {
     if (user) {
       setShowEmail(true);
@@ -69,6 +71,7 @@ export default function InfoModal({
     }
   }, [user, onLoginModalOpen])
 
+  // Copies the url of the item to the clipboard
   const handleShare = useCallback(() => {
     setIsShared(true);
     navigator.clipboard.writeText(
@@ -76,6 +79,7 @@ export default function InfoModal({
     );
   }, [props.id]);
 
+  // The "Owner" tag for an item - only visible to the user who posted the item
   const ownerTag = (
     <Flex>
       <Tag colorScheme="blue" variant="solid">
@@ -83,7 +87,8 @@ export default function InfoModal({
       </Tag>
     </Flex>
   )
-
+  
+  // The "Lost" tag for an item - visible to all users
   const lostTag = (
     <Flex>
       <Tag colorScheme="red" variant="solid">
@@ -91,7 +96,8 @@ export default function InfoModal({
       </Tag>
     </Flex>
   )
-
+  
+  // The "Found" tag for an item - visible to all users
   const foundTag = (
     <Flex>
       <Tag colorScheme="green" variant="solid">
@@ -99,15 +105,21 @@ export default function InfoModal({
       </Tag>
     </Flex>
   )
-
+  
+  // The date that the item was lost - visible to all users
   const lostDateText = (
     <Text color={"gray.500"}>Lost on {props.itemdate}</Text>
   )
 
+  // The date that the item was found - visible to all users
   const foundDateText = (
     <Text color={"gray.500"}> Found on {props.itemdate}</Text>
   )
-
+  
+  /*
+  The "View Contact" button for an item - visible to all users with an @uci.edu email.
+  Doesn't reveal the email of the user who posted the item, only indicates that the user can view the email
+  */
   const viewContactButton = (
     <Button
     colorScheme="blue"
@@ -120,6 +132,8 @@ export default function InfoModal({
   </Button>
   )
   
+  
+  //Shows the email of the user who posted the item - visible to all users with an @uci.edu email AND if the user has clicked the "View Contact" button
   const showContactButton = (
     <Button size="lg" variant="outline" colorScheme="blue">
     {props.email}
