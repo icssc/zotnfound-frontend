@@ -15,8 +15,7 @@ import about1 from "../../assets/images/about1.png";
 import about2 from "../../assets/images/about2.png";
 import about3 from "../../assets/images/about3.png";
 import about4 from "../../assets/images/about4.png";
-
-import axios from "axios";
+import {getItems, getLeaderboard} from "../../utils/ApiUtils";
 
 export default function AboutPage() {
   const navigate = useNavigate();
@@ -33,18 +32,13 @@ export default function AboutPage() {
   };
 
   useEffect(() => {
-    const getData = async () => {
-      axios
-        .get(`${process.env.REACT_APP_AWS_BACKEND_URL}/items/`)
-        .then((data) => setData(data.data))
-        .catch((err) => console.log(err));
+    getItems().then((itemsData) => {
+      setData(itemsData.data);
+    });
 
-      axios
-        .get(`${process.env.REACT_APP_AWS_BACKEND_URL}/leaderboard/`)
-        .then((leaderboardData) => setLeaderboard(leaderboardData.data))
-        .catch((err) => console.log(err));
-    };
-    getData();
+    getLeaderboard().then((leaderboardData) => {
+      setLeaderboard(leaderboardData.data);
+    });
   }, []);
 
   return (

@@ -1,12 +1,12 @@
 import { createContext } from "react";
 
 const DataContext = createContext({
-  data: [],
-  token: "",
+  data: [], // all marker data
+  token: "", // firebase db auth token
   isLoginModalOpen: false,
   onLoginModalOpen: () => {},
   onLoginModalClose: () => {},
-  setLoading: () => {},
+  setLoading: () => {}, // set loading screen on or off
 });
 
 export default DataContext;
