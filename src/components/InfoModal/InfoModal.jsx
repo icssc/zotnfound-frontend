@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Button,
@@ -18,7 +18,8 @@ import DataContext from "../../context/DataContext";
 import ImageContainer from "../ImageContainer/ImageContainer";
 import FeedbackModal from "../FeedbackModal/FeedbackModal";
 import { LinkIcon, CheckIcon, EmailIcon } from "@chakra-ui/icons";
-import axios from "axios";
+import { deleteItem } from "../../utils/ApiUtils";
+// import axios from "axios";
 
 export default function InfoModal({
   setData,
@@ -45,14 +46,7 @@ export default function InfoModal({
     if (!currentEmail) {
       return;
     }
-    axios
-      .delete(`${process.env.REACT_APP_AWS_BACKEND_URL}/items/${props.id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`, // verify auth
-        },
-      })
-      .then(() => console.log("Success"))
-      .catch((err) => console.log(err));
+    deleteItem(props, token); // delete item from database
     setData((prevItems) => {
       if (prevItems && prevItems.length > 0) {
         return prevItems.filter((item) => item.id !== props.id);
@@ -62,15 +56,96 @@ export default function InfoModal({
     setLoading(true);
   }
 
+  // Closes the Modal component and navigates back to the home page
+  const handleClose = useCallback(() => {
+    onClose();
+    navigate("/");
+  }, [onClose, navigate])
+  
+  // Reveals the email of the user who posted the item
+  const handleShowEmail = useCallback(() => {
+    if (user) {
+      setShowEmail(true);
+    } else {
+      onLoginModalOpen();
+    }
+  }, [user, onLoginModalOpen])
+
+  // Copies the url of the item to the clipboard
+  const handleShare = useCallback(() => {
+    setIsShared(true);
+    navigator.clipboard.writeText(
+      `https://zotnfound.com/${props.id}`
+    );
+  }, [props.id]);
+
+  // The "Owner" tag for an item - only visible to the user who posted the item
+  const ownerTag = (
+    <Flex>
+      <Tag colorScheme="blue" variant="solid">
+        Owner
+      </Tag>
+    </Flex>
+  )
+  
+  // The "Lost" tag for an item - visible to all users
+  const lostTag = (
+    <Flex>
+      <Tag colorScheme="red" variant="solid">
+        Lost
+      </Tag>
+    </Flex>
+  )
+  
+  // The "Found" tag for an item - visible to all users
+  const foundTag = (
+    <Flex>
+      <Tag colorScheme="green" variant="solid">
+        Found
+      </Tag>
+    </Flex>
+  )
+  
+  // The date that the item was lost - visible to all users
+  const lostDateText = (
+    <Text color={"gray.500"}>Lost on {props.itemdate}</Text>
+  )
+
+  // The date that the item was found - visible to all users
+  const foundDateText = (
+    <Text color={"gray.500"}> Found on {props.itemdate}</Text>
+  )
+  
+  /*
+  The "View Contact" button for an item - visible to all users with an @uci.edu email.
+  Doesn't reveal the email of the user who posted the item, only indicates that the user can view the email
+  */
+  const viewContactButton = (
+    <Button
+    colorScheme="blue"
+    size={"lg"}
+    gap={2}
+    isDisabled={props.isresolved && true}
+    onClick={handleShowEmail}
+    >
+    <EmailIcon /> View Contact
+  </Button>
+  )
+  
+  
+  //Shows the email of the user who posted the item - visible to all users with an @uci.edu email AND if the user has clicked the "View Contact" button
+  const showContactButton = (
+    <Button size="lg" variant="outline" colorScheme="blue">
+    {props.email}
+  </Button>
+  )
+
   const formattedDate = formatDate(new Date(props.date));
   return (
     <>
       <Modal
         isOpen={isOpen}
-        onClose={() => {
-          onClose();
-          navigate("/");
-        }}
+        onClose={handleClose}
         size={{ base: "full", md: "5xl" }}
       >
         <ModalOverlay />
@@ -110,23 +185,11 @@ export default function InfoModal({
 
                 <Flex gap={2}>
                   {currentEmail === props.email ? (
-                    <Flex>
-                      <Tag colorScheme="blue" variant="solid">
-                        Owner
-                      </Tag>
-                    </Flex>
+                    ownerTag
                   ) : props.islost ? (
-                    <Flex>
-                      <Tag colorScheme="red" variant="solid">
-                        Lost
-                      </Tag>
-                    </Flex>
+                    lostTag
                   ) : (
-                    <Flex>
-                      <Tag colorScheme="green" variant="solid">
-                        Found
-                      </Tag>
-                    </Flex>
+                    foundTag
                   )}
                   <Text color={"gray.500"}>Posted: {formattedDate}</Text>
                 </Flex>
@@ -140,9 +203,9 @@ export default function InfoModal({
                   Description:
                 </Text>
                 {props.islost ? (
-                  <Text color={"gray.500"}>Lost on {props.itemdate}</Text>
+                  lostDateText
                 ) : (
-                  <Text color={"gray.500"}> Found on {props.itemdate}</Text>
+                  foundDateText
                 )}
                 <Text
                   fontSize={"md"}
@@ -154,28 +217,13 @@ export default function InfoModal({
                 </Text>
               </Flex>
               <hr />
+
               <Flex gap={5} justifyContent={"center"} alignItems={"center"}>
                 {currentEmail !== props.email &&
                   (!showEmail ? (
-                    <Button
-                      colorScheme="blue"
-                      size={"lg"}
-                      gap={2}
-                      isDisabled={props.isresolved && true}
-                      onClick={() => {
-                        if (user) {
-                          setShowEmail(true);
-                        } else {
-                          onLoginModalOpen();
-                        }
-                      }}
-                    >
-                      <EmailIcon /> View Contact
-                    </Button>
+                    viewContactButton
                   ) : (
-                    <Button size="lg" variant="outline" colorScheme="blue">
-                      {props.email}
-                    </Button>
+                    showContactButton
                   ))}
                 {currentEmail === props.email && (
                   <Button
@@ -208,12 +256,7 @@ export default function InfoModal({
                   size={"lg"}
                   variant={"outline"}
                   gap={2}
-                  onClick={() => {
-                    setIsShared(true);
-                    navigator.clipboard.writeText(
-                      `https://zotnfound.com/${props.id}`
-                    );
-                  }}
+                  onClick={handleShare}
                 >
                   <LinkIcon /> {!isShared ? "Share" : "Copied"}
                 </Button>
