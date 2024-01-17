@@ -42,6 +42,7 @@ import logo from "../../assets/images/small_logo.png";
 import upload from "../../assets/images/download.png";
 
 import logout from "../../assets/logos/logout.svg";
+import unsubscribe from "../../assets/logos/unsubscribe.svg";
 import userlogo from "../../assets/logos/userlogo.svg";
 import yourposts from "../../assets/logos/yourposts.svg";
 import cookie from "../../assets/images/cookie.svg";
@@ -117,6 +118,20 @@ export default function Home() {
     onOpen: onLoginModalOpen,
     onClose: onLoginModalClose,
   } = useDisclosure();
+
+  const unsubscribeEmail = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.patch(
+        `${process.env.REACT_APP_AWS_BACKEND_URL}/leaderboard/changeSubscription`
+      );
+      // show status in toast
+      console.log("Successfully Unsubscribed!");
+    } catch (err) {
+      // show status in toast
+      console.log(err);
+    }
+  };
 
   const handleLogout = async (e) => {
     e.preventDefault();
@@ -253,6 +268,7 @@ export default function Home() {
               ZotnFound
             </MenuButton>
 
+            {/* ZotnFound Logo/Text Dropdown */}
             <MenuList zIndex={10000}>
               <MenuItem
                 alignItems={"center"}
@@ -353,6 +369,7 @@ export default function Home() {
                   />
                 </MenuButton>
 
+                {/* User Emblem Dropdown */}
                 <MenuList zIndex={10000}>
                   <MenuItem _focus={{ bg: "white" }}>
                     <Image
@@ -379,6 +396,16 @@ export default function Home() {
                       mr="12px"
                     />
                     Your Posts
+                  </MenuItem>
+
+                  <MenuItem onClick={unsubscribeEmail}>
+                    <Image
+                      boxSize="1.2rem"
+                      src={unsubscribe}
+                      alt="unsubscribe from newsletter button"
+                      mr="12px"
+                    />
+                    Unsubscribe
                   </MenuItem>
 
                   <MenuItem onClick={handleLogout}>
