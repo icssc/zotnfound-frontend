@@ -10,7 +10,7 @@ import Leaderboard from "./Leaderboard";
 import instagram from "../../assets/logos/instagram.svg";
 import { UserAuth } from "../../context/AuthContext";
 import DataContext from "../../context/DataContext";
-import { Spinner } from "@chakra-ui/react";
+import { Spinner, useToast } from "@chakra-ui/react";
 import {
   Input,
   InputGroup,
@@ -56,6 +56,8 @@ export default function Home() {
   const { user, logOut } = UserAuth();
   const [token, setToken] = useState("");
   const btnRef = useRef();
+
+  const toast = useToast();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
@@ -125,11 +127,21 @@ export default function Home() {
       await axios.patch(
         `${process.env.REACT_APP_AWS_BACKEND_URL}/leaderboard/changeSubscription`
       );
-      // show status in toast
-      console.log("Successfully Unsubscribed!");
+      toast({
+        title: "Succesfully Unsubscribed!",
+        description: "You have been unsubscribed from the ZotnFound Newsletter",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
     } catch (err) {
-      // show status in toast
-      console.log(err);
+      toast({
+        title: "Something went wrong :(",
+        description: "Error occurred while trying to unsubscribe",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
     }
   };
 
