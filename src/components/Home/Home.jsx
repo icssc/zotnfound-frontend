@@ -124,9 +124,19 @@ export default function Home() {
   const unsubscribeEmail = async (e) => {
     e.preventDefault();
     try {
-      await axios.patch(
-        `${process.env.REACT_APP_AWS_BACKEND_URL}/leaderboard/changeSubscription`
+      const result = await axios.patch(
+        `${process.env.REACT_APP_AWS_BACKEND_URL}/leaderboard/changeSubscription`,
+        {
+          email: user.email,
+          subscription: false,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // verify auth
+          },
+        }
       );
+      console.log(result);
       toast({
         title: "Succesfully Unsubscribed!",
         description: "You have been unsubscribed from the ZotnFound Newsletter",
