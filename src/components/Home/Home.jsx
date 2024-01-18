@@ -202,7 +202,8 @@ export default function Home() {
           (entry) => entry.email === user?.email
         );
         // If it does not exist, add the user to the leaderboard
-        if (!userEmailExists) {
+        if (!userEmailExists && user) {
+          // added user to prevent race condition (user is undefined before auth resolves)
           await axios.post(
             `${process.env.REACT_APP_AWS_BACKEND_URL}/leaderboard/`,
             {
