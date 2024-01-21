@@ -14,6 +14,8 @@ export default function ResultsBar({
 }) {
   const { data } = useContext(DataContext);
   const { user } = UserAuth();
+
+  // Define callback function to return filtered items (filtered according to search bar and filter markers)
   const filterItem = useCallback((item) => {
     return (
     (search.toLowerCase() === "" ||
@@ -29,6 +31,8 @@ export default function ResultsBar({
   );
 }, [search, findFilter.isFound, findFilter.isShowReturned, findFilter.isYourPosts, findFilter.islost, findFilter.type, findFilter.uploadDate, user]);
 
+
+// Define callback function to display filtered items as individual result cards in the results bar
   const mapItem = useCallback((item) => {
     return (
       <Box
@@ -54,6 +58,7 @@ export default function ResultsBar({
     .filter(filterItem)
     .map(mapItem);
 
+// Define JSX for empty results bar (no result cards)
   const noResults = (
     <Flex
       height="80%"

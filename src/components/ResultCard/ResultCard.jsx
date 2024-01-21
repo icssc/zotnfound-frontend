@@ -27,6 +27,8 @@ export default function ResultCard({
   const { id } = useParams();
 
   const formattedDate = formatDate(new Date(props.date));
+
+  // Define JSX for 'Lost' button on result card
   const lostButton = (<Button
     colorScheme="red"
     ml="20%"
@@ -39,6 +41,8 @@ export default function ResultCard({
       Lost
     </Button>
   )
+
+  // Define JSX for 'Found' button on result card
   const foundButton = (
     <Button
       colorScheme="green"
