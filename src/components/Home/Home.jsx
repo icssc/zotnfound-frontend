@@ -250,7 +250,7 @@ export default function Home() {
               alignItems="center"
               padding={2}
             >
-              ZotnFound
+              ZotnFound2
             </MenuButton>
 
             <MenuList zIndex={10000}>
