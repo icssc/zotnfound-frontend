@@ -6,6 +6,17 @@ export const getItems = async () => {
     .catch((err) => console.log(err));
 };
 
+// Get email associated with item id
+export const getItemEmail = (props, token) => {
+  return axios
+    .get(`${process.env.REACT_APP_AWS_BACKEND_URL}/items/${props.id}/email`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // verify auth
+      },
+    })
+    .catch((err) => console.log(err));
+};
+
 export const getLeaderboard = async () => {
   return axios
     .get(`${process.env.REACT_APP_AWS_BACKEND_URL}/leaderboard/`)
