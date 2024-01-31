@@ -68,7 +68,7 @@ export default function InfoModal({
     if (user) {
       // Retrieves the email of the item poster
       getItemEmail(props, token).then((itemsData) => {
-        setItemEmail(itemsData.data);
+        setItemEmail(itemsData.data.email);
       });
       setShowEmail(true);
     } else {
