@@ -320,13 +320,13 @@ export default function CreateModal({
   const handleItemImageChange = useCallback(
     (e) => {
       // image size limit of 2 MB
-      if(e.target.files[0].size <= 2000000){
+      if (e.target.files[0].size <= 10000000) {
         setNewAddedItem((prev) => ({
           ...prev,
-            image: e.target.files[0],
+          image: e.target.files[0],
         }));
       } else {
-        alert("Image exceeds size limit of 2 MB")
+        alert("Image exceeds size limit of 10 MB");
       }
     },
     [setNewAddedItem]
