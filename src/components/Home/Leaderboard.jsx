@@ -91,7 +91,7 @@ export default function Leaderboard({
                       {leaderboard[0]?.points}
                     </Text>
                     <Image
-                      class="gold-medal"
+                      className="gold-medal"
                       src={goldmedal}
                       alt="gold medal"
                       w={"5vh"}

@@ -10,7 +10,7 @@ import Leaderboard from "./Leaderboard";
 import instagram from "../../assets/logos/instagram.svg";
 import { UserAuth } from "../../context/AuthContext";
 import DataContext from "../../context/DataContext";
-import { Spinner } from "@chakra-ui/react";
+import { Spinner, useToast } from "@chakra-ui/react";
 import {
   Input,
   InputGroup,
@@ -42,6 +42,7 @@ import logo from "../../assets/images/small_logo.png";
 import upload from "../../assets/images/download.png";
 
 import logout from "../../assets/logos/logout.svg";
+import unsubscribe from "../../assets/logos/unsubscribe.svg";
 import userlogo from "../../assets/logos/userlogo.svg";
 import yourposts from "../../assets/logos/yourposts.svg";
 import cookie from "../../assets/images/cookie.svg";
@@ -55,6 +56,8 @@ export default function Home() {
   const { user, logOut } = UserAuth();
   const [token, setToken] = useState("");
   const btnRef = useRef();
+
+  const toast = useToast();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
@@ -118,6 +121,40 @@ export default function Home() {
     onClose: onLoginModalClose,
   } = useDisclosure();
 
+  const unsubscribeEmail = async (e) => {
+    e.preventDefault();
+    try {
+      const result = await axios.patch(
+        `${process.env.REACT_APP_AWS_BACKEND_URL}/leaderboard/changeSubscription`,
+        {
+          email: user.email,
+          subscription: false,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // verify auth
+          },
+        }
+      );
+      console.log(result);
+      toast({
+        title: "Succesfully Unsubscribed!",
+        description: "You have been unsubscribed from the ZotnFound Newsletter",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+    } catch (err) {
+      toast({
+        title: "Something went wrong :(",
+        description: "Error occurred while trying to unsubscribe",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+  };
+
   const handleLogout = async (e) => {
     e.preventDefault();
     try {
@@ -165,7 +202,8 @@ export default function Home() {
           (entry) => entry.email === user?.email
         );
         // If it does not exist, add the user to the leaderboard
-        if (!userEmailExists) {
+        if (!userEmailExists && user) {
+          // added user to prevent race condition (user is undefined before auth resolves)
           await axios.post(
             `${process.env.REACT_APP_AWS_BACKEND_URL}/leaderboard/`,
             {
@@ -253,6 +291,7 @@ export default function Home() {
               ZotnFound
             </MenuButton>
 
+            {/* ZotnFound Logo/Text Dropdown */}
             <MenuList zIndex={10000}>
               <MenuItem
                 alignItems={"center"}
@@ -353,6 +392,7 @@ export default function Home() {
                   />
                 </MenuButton>
 
+                {/* User Emblem Dropdown */}
                 <MenuList zIndex={10000}>
                   <MenuItem _focus={{ bg: "white" }}>
                     <Image
@@ -379,6 +419,16 @@ export default function Home() {
                       mr="12px"
                     />
                     Your Posts
+                  </MenuItem>
+
+                  <MenuItem onClick={unsubscribeEmail}>
+                    <Image
+                      boxSize="1.2rem"
+                      src={unsubscribe}
+                      alt="unsubscribe from newsletter button"
+                      mr="12px"
+                    />
+                    Unsubscribe
                   </MenuItem>
 
                   <MenuItem onClick={handleLogout}>
