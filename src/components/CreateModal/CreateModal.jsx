@@ -319,10 +319,15 @@ export default function CreateModal({
   // Define the callback function to change the item image
   const handleItemImageChange = useCallback(
     (e) => {
-      setNewAddedItem((prev) => ({
-        ...prev,
-        image: e.target.files[0],
-      }));
+      // image size limit of 2 MB
+      if (e.target.files[0].size <= 10000000) {
+        setNewAddedItem((prev) => ({
+          ...prev,
+          image: e.target.files[0],
+        }));
+      } else {
+        alert("Image exceeds size limit of 10 MB");
+      }
     },
     [setNewAddedItem]
   );
@@ -523,6 +528,7 @@ export default function CreateModal({
                       <Flex justifyContent="center" alignItems="center" gap={3}>
                         <Input
                           type="file"
+                          accept="image/*"
                           multiple
                           width="38%"
                           sx={{
