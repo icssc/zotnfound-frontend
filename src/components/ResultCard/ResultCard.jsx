@@ -27,6 +27,35 @@ export default function ResultCard({
   const { id } = useParams();
 
   const formattedDate = formatDate(new Date(props.date));
+
+  // Define JSX for 'Lost' button on result card
+  const lostButton = (<Button
+    colorScheme="red"
+    ml="20%"
+    size="md"
+    w="40"
+    gap={1}
+    onClick={onResultsBarClose}
+    >
+      <Image src={locate} />
+      Lost
+    </Button>
+  )
+
+  // Define JSX for 'Found' button on result card
+  const foundButton = (
+    <Button
+      colorScheme="green"
+      ml="20%"
+      size="md"
+      w="40"
+      gap={1}
+      onClick={onResultsBarClose}
+    >
+      <Image src={locate} />
+      Found
+    </Button>
+  )
   return (
     <>
       <Card maxW="lg" align={"center"} mb="10px">
@@ -76,31 +105,7 @@ export default function ResultCard({
             >
               View
             </Button>
-            {props.islost ? (
-              <Button
-                colorScheme="red"
-                ml="20%"
-                size="md"
-                w="40"
-                gap={1}
-                onClick={onResultsBarClose}
-              >
-                <Image src={locate} />
-                Lost
-              </Button>
-            ) : (
-              <Button
-                colorScheme="green"
-                ml="20%"
-                size="md"
-                w="40"
-                gap={1}
-                onClick={onResultsBarClose}
-              >
-                <Image src={locate} />
-                Found
-              </Button>
-            )}
+            {props.islost ? lostButton : foundButton}
           </Flex>
         </CardFooter>
       </Card>
