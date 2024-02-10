@@ -84,6 +84,12 @@ export default function Map({
   ];
   const bounds = L.latLngBounds(allowedBounds);
 
+  const mapBoundsCoordinates = [
+    [33.625038, -117.875143],
+    [33.668298, -117.808742],
+  ];
+  const mapBounds = L.latLngBounds(mapBoundsCoordinates);
+
   const handleMarkerSelect = async () => {
     setShowDonut(true);
     await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -318,8 +324,11 @@ export default function Map({
         className="map-container"
         center={centerPosition}
         zoom={17}
+        minZoom={15}
         zoomControl={false}
         attributionControl={false}
+        maxBounds={mapBounds}
+        maxBoundsViscosity={1.0}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
