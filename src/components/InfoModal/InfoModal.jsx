@@ -227,11 +227,7 @@ export default function InfoModal({
                   </Button>
                 )}
 
-                {[
-                  "dangnn1@uci.edu",
-                  "stevenz9@uci.edu",
-                  "katyh1@uci.edu",
-                ].includes(currentEmail) && (
+                {currentEmail === props.email && (
                   <Button
                     colorScheme="red"
                     size={"lg"}

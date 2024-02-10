@@ -176,16 +176,26 @@ export default function Home() {
   //get data
   useEffect(() => {
     const getData = async () => {
+      // Define the headers object
+      const config = {
+        headers: {
+          // Include any other headers you need
+          "User-Email": user?.email, // Custom header with the user's email
+        },
+      };
+
+      // Request to get items with additional headers
       axios
-        .get(`${process.env.REACT_APP_AWS_BACKEND_URL}/items/`)
+        .get(`${process.env.REACT_APP_AWS_BACKEND_URL}/items/`, config)
         .then((obj) => {
           setData(obj.data.map((item) => ({ ...item, id: item.id })));
         })
         .catch((err) => console.log(err));
+
       setLoading(true);
     };
     getData();
-  }, []);
+  }, [user]);
 
   //LEADERBOARD GET INFO
   useEffect(() => {
@@ -231,7 +241,9 @@ export default function Home() {
       }
     };
 
-    getLeaderboard();
+    if (user) {
+      getLeaderboard();
+    }
   }, [user, token]);
 
   // set token to auth

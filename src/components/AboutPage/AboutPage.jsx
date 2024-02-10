@@ -15,13 +15,13 @@ import about1 from "../../assets/images/about1.png";
 import about2 from "../../assets/images/about2.png";
 import about3 from "../../assets/images/about3.png";
 import about4 from "../../assets/images/about4.png";
-import {getItems, getLeaderboard} from "../../utils/ApiUtils";
+import { getItems, getLeaderboardCount } from "../../utils/ApiUtils";
 
 export default function AboutPage() {
   const navigate = useNavigate();
   const [screenWidth, setScreenWidth] = useState(window.screen.width);
   const [data, setData] = useState([]);
-  const [leaderboard, setLeaderboard] = useState([]);
+  const [leaderboardCount, setLeaderboardCount] = useState(0);
 
   window.onresize = () => {
     setScreenWidth(window.screen.width);
@@ -36,8 +36,8 @@ export default function AboutPage() {
       setData(itemsData.data);
     });
 
-    getLeaderboard().then((leaderboardData) => {
-      setLeaderboard(leaderboardData.data);
+    getLeaderboardCount().then((leaderboardData) => {
+      setLeaderboardCount(leaderboardData.data);
     });
   }, []);
 
@@ -115,7 +115,7 @@ export default function AboutPage() {
         </Flex>
         <Flex direction={"column"} m={"1%"}>
           <Text fontWeight={600} fontSize={{ base: "1.3rem", md: "2.4rem" }}>
-            {10 + leaderboard.length}
+            {leaderboardCount}
           </Text>
           <Text fontSize={{ base: "0.8rem", md: "1.2rem" }}>Active Users</Text>
         </Flex>

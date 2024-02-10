@@ -17,9 +17,9 @@ export const getItemEmail = (props, token) => {
     .catch((err) => console.log(err));
 };
 
-export const getLeaderboard = async () => {
+export const getLeaderboardCount = async () => {
   return axios
-    .get(`${process.env.REACT_APP_AWS_BACKEND_URL}/leaderboard/`)
+    .get(`${process.env.REACT_APP_AWS_BACKEND_URL}/leaderboard/count`)
     .catch((err) => console.log(err));
 };
 
