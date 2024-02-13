@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import Map from "../Map/Map";
 import "./Home.css";
 import Filter from "../Filter/Filter";
@@ -197,6 +197,28 @@ export default function Home() {
     getData();
   }, [user]);
 
+  // retrieve a list of items from the last 7 days
+  const retrieveItemsWithinWeek = useCallback(() => {
+    axios
+      .get(`${process.env.REACT_APP_AWS_BACKEND_URL}/items/week`)
+      .then((obj) => {
+        setData(obj.data.map((item) => ({ ...item, id: item.id })));
+      })
+      .catch((err) => console.log(err));
+  },[]);
+
+  // retrieve a list of items from the last year
+  const retrieveItemsWithinYear = useCallback((e) => {
+    console.log("year got entered here 1");
+    axios
+      .get(`${process.env.REACT_APP_AWS_BACKEND_URL}/items/year`)
+      .then((obj) => {
+        console.log("year got entered here 2");
+        setData(obj.data.map((item) => ({ ...item, id: item.id })));
+      })
+      .catch((err) => console.log("Error Here", err));
+  },[]);
+
   //LEADERBOARD GET INFO
   useEffect(() => {
     const getLeaderboard = async () => {
@@ -252,6 +274,8 @@ export default function Home() {
       setToken(user.accessToken);
     }
   }, [user]);
+
+
 
   window.onresize = () => {
     setScreenWidth(window.screen.width);
@@ -561,6 +585,38 @@ export default function Home() {
                 isOpen={isOpen}
                 onClose={onClose}
               />
+              <Menu>
+                <MenuButton
+                  as={Button}
+                  backgroundColor="white"
+                  variant="outline"
+                  boxShadow="7px 7px 14px #666666,
+                -7px -7px 14px #ffffff;"
+                  color="#74a2fa"
+                  fontSize={{ base: "xl", md: "2xl" }}
+                  size="lg"
+                  gap={2}
+                  borderRadius={"lg"}
+                >
+                  Date Range Filter
+                </MenuButton>
+                <MenuList>
+                  <MenuItem>All</MenuItem>
+                  <MenuItem 
+                  onClick={retrieveItemsWithinWeek}
+                  >
+                    Last Week
+                  </MenuItem>
+                  <MenuItem>Last 2 Weeks</MenuItem>
+                  <MenuItem>Last Month</MenuItem>
+                  <MenuItem
+                    onClick={retrieveItemsWithinYear}
+                  >
+                    Last Year
+                  </MenuItem>
+                </MenuList>
+              </Menu>
+
               <Button
                 display={{ md: "none" }}
                 background={"#74a2fa"}
@@ -573,9 +629,11 @@ export default function Home() {
                 justifyContent={"center"}
                 alignItems={"center"}
               >
-                <StarIcon />
+                <StarIcon /> 
+                {/* What is this button? */}
               </Button>
 
+              
               <Drawer
                 isOpen={isResultsBarOpen}
                 placement="right"
