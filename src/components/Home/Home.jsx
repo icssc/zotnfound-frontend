@@ -598,7 +598,7 @@ export default function Home() {
               </Alert>
             </Flex>
           ) : (
-            <>
+            <Flex gap="4">
               <Button
                 backgroundColor="white"
                 variant="outline"
@@ -632,7 +632,7 @@ export default function Home() {
                   color="#74a2fa"
                   fontSize={{ base: "xl", md: "2xl" }}
                   size="lg"
-                  gap={2}
+                  // gap={2}
                   borderRadius={"lg"}
                 >
                   {DateRangeFilter}
@@ -746,7 +746,7 @@ export default function Home() {
                   <DrawerFooter></DrawerFooter>
                 </DrawerContent>
               </Drawer>
-            </>
+            </Flex>
           )}
         </Flex>
         <Flex position="absolute">
