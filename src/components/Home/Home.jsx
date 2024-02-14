@@ -113,7 +113,7 @@ export default function Home() {
   const [focusLocation, setFocusLocation] = useState();
   const [screenWidth, setScreenWidth] = useState(window.screen.width);
   const [uploadImg, setUploadImg] = useState("");
-
+  const [DateRangeFilter, setDateRangeFilter] = useState("Date Range Filter");
   // LOGIN MODAL
   const {
     isOpen: isLoginModalOpen,
@@ -197,28 +197,64 @@ export default function Home() {
     getData();
   }, [user]);
 
+  // retrieve a list of items ALL TIME
+  const retrieveItemsAllTime = useCallback(() => {
+    axios
+      .get(`${process.env.REACT_APP_AWS_BACKEND_URL}/items/`)
+      .then((obj) => {
+        setData(obj.data.map((item) => ({ ...item, id: item.id })));
+        setDateRangeFilter("All");
+      })
+      .catch((err) => console.log(err));
+  },[]);
+
   // retrieve a list of items from the last 7 days
   const retrieveItemsWithinWeek = useCallback(() => {
     axios
       .get(`${process.env.REACT_APP_AWS_BACKEND_URL}/items/week`)
       .then((obj) => {
         setData(obj.data.map((item) => ({ ...item, id: item.id })));
+        setDateRangeFilter("Last 7 Days");
       })
       .catch((err) => console.log(err));
   },[]);
 
+  // retrieve a list of items from the last 2 weeks
+  const retrieveItemsWithinTwoWeeks = useCallback(() => {
+    axios
+      .get(`${process.env.REACT_APP_AWS_BACKEND_URL}/items/two_weeks`)
+      .then((obj) => {
+        setData(obj.data.map((item) => ({ ...item, id: item.id })));
+        setDateRangeFilter("Last 14 Days");
+      })
+      .catch((err) => console.log(err));
+  },[]);
+
+  // retrieve a list of items from the last month
+  const retrieveItemsWithinMonth = useCallback(() => {
+    axios
+      .get(`${process.env.REACT_APP_AWS_BACKEND_URL}/items/month`)
+      .then((obj) => {
+        setData(obj.data.map((item) => ({ ...item, id: item.id })));
+        setDateRangeFilter("Last 30 Days");
+      })
+      .catch((err) => console.log(err)); 
+  },[]);
+
   // retrieve a list of items from the last year
-  const retrieveItemsWithinYear = useCallback((e) => {
+  const retrieveItemsWithinYear = useCallback(() => {
     console.log("year got entered here 1");
     axios
       .get(`${process.env.REACT_APP_AWS_BACKEND_URL}/items/year`)
       .then((obj) => {
         console.log("year got entered here 2");
         setData(obj.data.map((item) => ({ ...item, id: item.id })));
+        setDateRangeFilter("This Year");
       })
       .catch((err) => console.log("Error Here", err));
   },[]);
 
+  
   //LEADERBOARD GET INFO
   useEffect(() => {
     const getLeaderboard = async () => {
@@ -588,6 +624,7 @@ export default function Home() {
               <Menu>
                 <MenuButton
                   as={Button}
+                  rightIcon={<ChevronDownIcon />}
                   backgroundColor="white"
                   variant="outline"
                   boxShadow="7px 7px 14px #666666,
@@ -598,21 +635,33 @@ export default function Home() {
                   gap={2}
                   borderRadius={"lg"}
                 >
-                  Date Range Filter
+                  {DateRangeFilter}
                 </MenuButton>
                 <MenuList>
-                  <MenuItem>All</MenuItem>
-                  <MenuItem 
-                  onClick={retrieveItemsWithinWeek}
+                  <MenuItem
+                    onClick={retrieveItemsAllTime}
                   >
-                    Last Week
+                    All
                   </MenuItem>
-                  <MenuItem>Last 2 Weeks</MenuItem>
-                  <MenuItem>Last Month</MenuItem>
                   <MenuItem
                     onClick={retrieveItemsWithinYear}
                   >
-                    Last Year
+                    This Year
+                  </MenuItem>
+                  <MenuItem 
+                  onClick={retrieveItemsWithinWeek}
+                  >
+                    Last 7 Days
+                  </MenuItem>
+                  <MenuItem
+                    onClick={retrieveItemsWithinTwoWeeks}
+                  >
+                    Last 14 Days
+                  </MenuItem>
+                  <MenuItem
+                    onClick={retrieveItemsWithinMonth}
+                  >
+                    Last 30 Days
                   </MenuItem>
                 </MenuList>
               </Menu>
@@ -630,7 +679,6 @@ export default function Home() {
                 alignItems={"center"}
               >
                 <StarIcon /> 
-                {/* What is this button? */}
               </Button>
 
               
