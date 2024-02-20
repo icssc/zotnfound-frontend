@@ -3,8 +3,8 @@ import { Image, Flex, Text } from "@chakra-ui/react";
 export default function ImageContainer({ image, isresolved }) {
   return (
     <Flex
-      w={{ base: "100%", md: 450 }}
-      h={{ base: 400, md: 450 }}
+      w={{ base: "100%", md: 300 }}
+      h={{ base: 350, md: 300 }}
       justifyContent={"center"}
       alignItems={"center"}
     >
@@ -16,7 +16,7 @@ export default function ImageContainer({ image, isresolved }) {
           alignItems={"center"}
           marginTop={30}
           flexDir={"column"}
-          w={{ base: "100vw", md: 450 }}
+          w={{ base: "100vw", md: 300 }}
         >
           <Text fontSize={18} as="b" color={"white"}>
             RETURNED
@@ -26,7 +26,14 @@ export default function ImageContainer({ image, isresolved }) {
           </Text>
         </Flex>
       )}
-      <Image w="100%" h="100%" rounded={"lg"} objectFit={"cover"} src={image} />
+      <Image
+        w="100%"
+        h="100%"
+        rounded={"lg"}
+        objectFit={"scale-down"}
+        src={image}
+        borderRadius={"lg"}
+      />
     </Flex>
   );
 }

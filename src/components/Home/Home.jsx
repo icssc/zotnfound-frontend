@@ -1,15 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
-import Map from "../Map/Map";
-import "./Home.css";
-import Filter from "../Filter/Filter";
-import ResultsBar from "../ResultsBar/ResultsBar";
-import CreateModal from "../CreateModal/CreateModal";
-import LoginModal from "../LoginModal/LoginModal";
-import Leaderboard from "./Leaderboard";
+import axios from "axios";
 
-import instagram from "../../assets/logos/instagram.svg";
 import { UserAuth } from "../../context/AuthContext";
 import DataContext from "../../context/DataContext";
+
 import { Spinner, useToast } from "@chakra-ui/react";
 import {
   Input,
@@ -37,8 +31,7 @@ import {
   AlertIcon,
   AlertTitle,
 } from "@chakra-ui/react";
-import { SettingsIcon, ChevronDownIcon, StarIcon } from "@chakra-ui/icons";
-import logo from "../../assets/images/small_logo.png";
+import { SettingsIcon, StarIcon } from "@chakra-ui/icons";
 import upload from "../../assets/images/download.png";
 
 import logout from "../../assets/logos/logout.svg";
@@ -47,7 +40,15 @@ import userlogo from "../../assets/logos/userlogo.svg";
 import yourposts from "../../assets/logos/yourposts.svg";
 import cookie from "../../assets/images/cookie.svg";
 
-import axios from "axios";
+import Map from "../Map/Map";
+import "./Home.css";
+import Filter from "../Filter/Filter";
+import ResultsBar from "../ResultsBar/ResultsBar";
+import CreateModal from "../CreateModal/CreateModal";
+import LoginModal from "../LoginModal/LoginModal";
+import Leaderboard from "./Leaderboard";
+import ZotNFoundLogoText from "./ZotNFoundLogoText";
+import DateRangeFilter from "./DateRangeFilter";
 
 export default function Home() {
   const [search, setSearch] = useState("");
@@ -111,9 +112,7 @@ export default function Home() {
   const centerPosition = [33.6461, -117.8427];
   const [position, setPosition] = useState(centerPosition);
   const [focusLocation, setFocusLocation] = useState();
-  const [screenWidth, setScreenWidth] = useState(window.screen.width);
   const [uploadImg, setUploadImg] = useState("");
-
   // LOGIN MODAL
   const {
     isOpen: isLoginModalOpen,
@@ -139,7 +138,7 @@ export default function Home() {
       console.log(result);
       toast({
         title: "Succesfully Unsubscribed!",
-        description: "You have been unsubscribed from the ZotnFound Newsletter",
+        description: "You have been unsubscribed from the ZotNFound Newsletter",
         status: "success",
         duration: 5000,
         isClosable: true,
@@ -253,14 +252,11 @@ export default function Home() {
     }
   }, [user]);
 
-  window.onresize = () => {
-    setScreenWidth(window.screen.width);
-  };
-
   return (
     <DataContext.Provider
       value={{
         data: data,
+        setData: setData,
         token: token,
         setLoading: setLoading,
         isLoginModalOpen: isLoginModalOpen,
@@ -274,70 +270,10 @@ export default function Home() {
         alignItems="center"
         className="big"
       >
-        <Flex
-          alignItems="center"
-          w={{ base: "20%", md: "20%" }}
-          className="med"
-          minWidth={{ base: "125px", md: "315px" }}
-        >
-          <Image
-            width={{ base: "50px", md: "100px" }}
-            src={logo}
-            mb="5%"
-            mt="3%"
-            ml="10%"
-            display={screenWidth < 350 ? "None" : "inline"}
-          />
-          <Menu autoSelect={false}>
-            <MenuButton
-              as={Button}
-              rightIcon={<ChevronDownIcon />}
-              size={{ base: "4xl", md: "4xl" }}
-              ml="3%"
-              fontSize={{ base: "xl", md: "4xl" }}
-              background="white"
-              justifyContent="center"
-              alignItems="center"
-              padding={2}
-            >
-              ZotnFound
-            </MenuButton>
+        {/* LOGO + TEXT */}
+        <ZotNFoundLogoText />
 
-            {/* ZotnFound Logo/Text Dropdown */}
-            <MenuList zIndex={10000}>
-              <MenuItem
-                alignItems={"center"}
-                justifyContent={"center"}
-                as={"a"}
-                href="https://www.instagram.com/zotnfound/"
-              >
-                @ZotnFound
-                <Image
-                  src={instagram}
-                  maxWidth="10%"
-                  maxHeight="10%"
-                  ml="5%"
-                ></Image>
-              </MenuItem>
-              <MenuItem
-                alignItems={"center"}
-                justifyContent={"center"}
-                as={"a"}
-                href="/update"
-              >
-                News
-              </MenuItem>
-              <MenuItem
-                alignItems={"center"}
-                justifyContent={"center"}
-                as={"a"}
-                href="/about"
-              >
-                About
-              </MenuItem>
-            </MenuList>
-          </Menu>
-        </Flex>
+        {/* SEARCH BAR */}
         <HStack
           w={{ base: "100%", md: "40%" }}
           display={{ base: "none", md: "block" }}
@@ -538,7 +474,7 @@ export default function Home() {
               </Alert>
             </Flex>
           ) : (
-            <>
+            <Flex gap="4">
               <Button
                 backgroundColor="white"
                 variant="outline"
@@ -561,6 +497,9 @@ export default function Home() {
                 isOpen={isOpen}
                 onClose={onClose}
               />
+
+              <DateRangeFilter />
+
               <Button
                 display={{ md: "none" }}
                 background={"#74a2fa"}
@@ -630,7 +569,6 @@ export default function Home() {
                       <ResultsBar
                         search={search}
                         findFilter={findFilter}
-                        setData={setData}
                         setFocusLocation={setFocusLocation}
                         onResultsBarClose={onResultsBarClose}
                         setLeaderboard={setLeaderboard}
@@ -640,7 +578,7 @@ export default function Home() {
                   <DrawerFooter></DrawerFooter>
                 </DrawerContent>
               </Drawer>
-            </>
+            </Flex>
           )}
         </Flex>
         <Flex position="absolute">
@@ -652,7 +590,6 @@ export default function Home() {
             setIsEdit={setIsEdit}
             search={search}
             findFilter={findFilter}
-            setData={setData}
             setIsCreate={setIsCreate}
             isCreate={isCreate}
             centerPosition={centerPosition}
@@ -675,7 +612,6 @@ export default function Home() {
           <ResultsBar
             search={search}
             findFilter={findFilter}
-            setData={setData}
             setFocusLocation={setFocusLocation}
             setLeaderboard={setLeaderboard}
           />
