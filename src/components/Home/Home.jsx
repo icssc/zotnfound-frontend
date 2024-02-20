@@ -1,15 +1,9 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import Map from "../Map/Map";
-import "./Home.css";
-import Filter from "../Filter/Filter";
-import ResultsBar from "../ResultsBar/ResultsBar";
-import CreateModal from "../CreateModal/CreateModal";
-import LoginModal from "../LoginModal/LoginModal";
-import Leaderboard from "./Leaderboard";
+import axios from "axios";
 
-import instagram from "../../assets/logos/instagram.svg";
 import { UserAuth } from "../../context/AuthContext";
 import DataContext from "../../context/DataContext";
+
 import { Spinner, useToast } from "@chakra-ui/react";
 import {
   Input,
@@ -37,8 +31,7 @@ import {
   AlertIcon,
   AlertTitle,
 } from "@chakra-ui/react";
-import { SettingsIcon, ChevronDownIcon, StarIcon } from "@chakra-ui/icons";
-import logo from "../../assets/images/small_logo.png";
+import { SettingsIcon, StarIcon } from "@chakra-ui/icons";
 import upload from "../../assets/images/download.png";
 
 import logout from "../../assets/logos/logout.svg";
@@ -47,7 +40,15 @@ import userlogo from "../../assets/logos/userlogo.svg";
 import yourposts from "../../assets/logos/yourposts.svg";
 import cookie from "../../assets/images/cookie.svg";
 
-import axios from "axios";
+import Map from "../Map/Map";
+import "./Home.css";
+import Filter from "../Filter/Filter";
+import ResultsBar from "../ResultsBar/ResultsBar";
+import CreateModal from "../CreateModal/CreateModal";
+import LoginModal from "../LoginModal/LoginModal";
+import Leaderboard from "./Leaderboard";
+import ZotNFoundLogoText from "./ZotNFoundLogoText";
+import DateRangeFilter from "./DateRangeFilter";
 
 export default function Home() {
   const [search, setSearch] = useState("");
@@ -111,9 +112,7 @@ export default function Home() {
   const centerPosition = [33.6461, -117.8427];
   const [position, setPosition] = useState(centerPosition);
   const [focusLocation, setFocusLocation] = useState();
-  const [screenWidth, setScreenWidth] = useState(window.screen.width);
   const [uploadImg, setUploadImg] = useState("");
-  const [DateRangeFilter, setDateRangeFilter] = useState("Date Range Filter");
   // LOGIN MODAL
   const {
     isOpen: isLoginModalOpen,
@@ -139,7 +138,7 @@ export default function Home() {
       console.log(result);
       toast({
         title: "Succesfully Unsubscribed!",
-        description: "You have been unsubscribed from the ZotnFound Newsletter",
+        description: "You have been unsubscribed from the ZotNFound Newsletter",
         status: "success",
         duration: 5000,
         isClosable: true,
@@ -197,64 +196,6 @@ export default function Home() {
     getData();
   }, [user]);
 
-  // retrieve a list of items ALL TIME
-  const retrieveItemsAllTime = useCallback(() => {
-    axios
-      .get(`${process.env.REACT_APP_AWS_BACKEND_URL}/items/`)
-      .then((obj) => {
-        setData(obj.data.map((item) => ({ ...item, id: item.id })));
-        setDateRangeFilter("All");
-      })
-      .catch((err) => console.log(err));
-  },[]);
-
-  // retrieve a list of items from the last 7 days
-  const retrieveItemsWithinWeek = useCallback(() => {
-    axios
-      .get(`${process.env.REACT_APP_AWS_BACKEND_URL}/items/week`)
-      .then((obj) => {
-        setData(obj.data.map((item) => ({ ...item, id: item.id })));
-        setDateRangeFilter("Last 7 Days");
-      })
-      .catch((err) => console.log(err));
-  },[]);
-
-  // retrieve a list of items from the last 2 weeks
-  const retrieveItemsWithinTwoWeeks = useCallback(() => {
-    axios
-      .get(`${process.env.REACT_APP_AWS_BACKEND_URL}/items/two_weeks`)
-      .then((obj) => {
-        setData(obj.data.map((item) => ({ ...item, id: item.id })));
-        setDateRangeFilter("Last 14 Days");
-      })
-      .catch((err) => console.log(err));
-  },[]);
-
-  // retrieve a list of items from the last month
-  const retrieveItemsWithinMonth = useCallback(() => {
-    axios
-      .get(`${process.env.REACT_APP_AWS_BACKEND_URL}/items/month`)
-      .then((obj) => {
-        setData(obj.data.map((item) => ({ ...item, id: item.id })));
-        setDateRangeFilter("Last 30 Days");
-      })
-      .catch((err) => console.log(err)); 
-  },[]);
-
-  // retrieve a list of items from the last year
-  const retrieveItemsWithinYear = useCallback(() => {
-    console.log("year got entered here 1");
-    axios
-      .get(`${process.env.REACT_APP_AWS_BACKEND_URL}/items/year`)
-      .then((obj) => {
-        console.log("year got entered here 2");
-        setData(obj.data.map((item) => ({ ...item, id: item.id })));
-        setDateRangeFilter("This Year");
-      })
-      .catch((err) => console.log("Error Here", err));
-  },[]);
-
-  
   //LEADERBOARD GET INFO
   useEffect(() => {
     const getLeaderboard = async () => {
@@ -311,16 +252,11 @@ export default function Home() {
     }
   }, [user]);
 
-
-
-  window.onresize = () => {
-    setScreenWidth(window.screen.width);
-  };
-
   return (
     <DataContext.Provider
       value={{
         data: data,
+        setData: setData,
         token: token,
         setLoading: setLoading,
         isLoginModalOpen: isLoginModalOpen,
@@ -334,70 +270,10 @@ export default function Home() {
         alignItems="center"
         className="big"
       >
-        <Flex
-          alignItems="center"
-          w={{ base: "20%", md: "20%" }}
-          className="med"
-          minWidth={{ base: "125px", md: "315px" }}
-        >
-          <Image
-            width={{ base: "50px", md: "100px" }}
-            src={logo}
-            mb="5%"
-            mt="3%"
-            ml="10%"
-            display={screenWidth < 350 ? "None" : "inline"}
-          />
-          <Menu autoSelect={false}>
-            <MenuButton
-              as={Button}
-              rightIcon={<ChevronDownIcon />}
-              size={{ base: "4xl", md: "4xl" }}
-              ml="3%"
-              fontSize={{ base: "xl", md: "4xl" }}
-              background="white"
-              justifyContent="center"
-              alignItems="center"
-              padding={2}
-            >
-              ZotnFound
-            </MenuButton>
+        {/* LOGO + TEXT */}
+        <ZotNFoundLogoText />
 
-            {/* ZotnFound Logo/Text Dropdown */}
-            <MenuList zIndex={10000}>
-              <MenuItem
-                alignItems={"center"}
-                justifyContent={"center"}
-                as={"a"}
-                href="https://www.instagram.com/zotnfound/"
-              >
-                @ZotnFound
-                <Image
-                  src={instagram}
-                  maxWidth="10%"
-                  maxHeight="10%"
-                  ml="5%"
-                ></Image>
-              </MenuItem>
-              <MenuItem
-                alignItems={"center"}
-                justifyContent={"center"}
-                as={"a"}
-                href="/update"
-              >
-                News
-              </MenuItem>
-              <MenuItem
-                alignItems={"center"}
-                justifyContent={"center"}
-                as={"a"}
-                href="/about"
-              >
-                About
-              </MenuItem>
-            </MenuList>
-          </Menu>
-        </Flex>
+        {/* SEARCH BAR */}
         <HStack
           w={{ base: "100%", md: "40%" }}
           display={{ base: "none", md: "block" }}
@@ -621,50 +497,8 @@ export default function Home() {
                 isOpen={isOpen}
                 onClose={onClose}
               />
-              <Menu>
-                <MenuButton
-                  as={Button}
-                  rightIcon={<ChevronDownIcon />}
-                  backgroundColor="white"
-                  variant="outline"
-                  boxShadow="7px 7px 14px #666666,
-                -7px -7px 14px #ffffff;"
-                  color="#74a2fa"
-                  fontSize={{ base: "xl", md: "2xl" }}
-                  size="lg"
-                  // gap={2}
-                  borderRadius={"lg"}
-                >
-                  {DateRangeFilter}
-                </MenuButton>
-                <MenuList>
-                  <MenuItem
-                    onClick={retrieveItemsAllTime}
-                  >
-                    All
-                  </MenuItem>
-                  <MenuItem
-                    onClick={retrieveItemsWithinYear}
-                  >
-                    This Year
-                  </MenuItem>
-                  <MenuItem 
-                  onClick={retrieveItemsWithinWeek}
-                  >
-                    Last 7 Days
-                  </MenuItem>
-                  <MenuItem
-                    onClick={retrieveItemsWithinTwoWeeks}
-                  >
-                    Last 14 Days
-                  </MenuItem>
-                  <MenuItem
-                    onClick={retrieveItemsWithinMonth}
-                  >
-                    Last 30 Days
-                  </MenuItem>
-                </MenuList>
-              </Menu>
+
+              <DateRangeFilter />
 
               <Button
                 display={{ md: "none" }}
@@ -678,10 +512,9 @@ export default function Home() {
                 justifyContent={"center"}
                 alignItems={"center"}
               >
-                <StarIcon /> 
+                <StarIcon />
               </Button>
 
-              
               <Drawer
                 isOpen={isResultsBarOpen}
                 placement="right"
@@ -736,7 +569,6 @@ export default function Home() {
                       <ResultsBar
                         search={search}
                         findFilter={findFilter}
-                        setData={setData}
                         setFocusLocation={setFocusLocation}
                         onResultsBarClose={onResultsBarClose}
                         setLeaderboard={setLeaderboard}
@@ -758,7 +590,6 @@ export default function Home() {
             setIsEdit={setIsEdit}
             search={search}
             findFilter={findFilter}
-            setData={setData}
             setIsCreate={setIsCreate}
             isCreate={isCreate}
             centerPosition={centerPosition}
@@ -781,7 +612,6 @@ export default function Home() {
           <ResultsBar
             search={search}
             findFilter={findFilter}
-            setData={setData}
             setFocusLocation={setFocusLocation}
             setLeaderboard={setLeaderboard}
           />

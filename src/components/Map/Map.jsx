@@ -53,7 +53,6 @@ export default function Map({
   search,
   findFilter,
   setIsCreate,
-  setData,
   isCreate,
   centerPosition,
   position,
@@ -65,7 +64,7 @@ export default function Map({
 }) {
   // Contexts
   const { user } = UserAuth();
-  const { data, setLoading, token } = useContext(DataContext);
+  const { data, setLoading, token, setData } = useContext(DataContext);
 
   // State: isOpen - if InfoModal is open
   const { isOpen, onOpen, onClose } = useDisclosure();
