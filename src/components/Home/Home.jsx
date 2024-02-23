@@ -5,13 +5,14 @@ import { UserAuth } from "../../context/AuthContext";
 import DataContext from "../../context/DataContext";
 
 import { Spinner, useToast } from "@chakra-ui/react";
-import { AddIcon } from "@chakra-ui/icons";
+import { AddIcon, CloseIcon } from "@chakra-ui/icons";
 import {
   IconButton,
   Input,
   InputGroup,
   InputLeftAddon,
   Button,
+  ButtonGroup,
   Flex,
   HStack,
   Text,
@@ -607,21 +608,37 @@ export default function Home() {
         </Flex>
 
         <Flex position="absolute">
-          <IconButton
+          <ButtonGroup
             position="absolute"
             right="10"
             bottom="10"
-            height={75}
-            width={75}
             zIndex={1000}
-            isRound={true}
             variant="solid"
-            colorScheme="twitter"
-            aria-label="Add"
-            fontSize="30px"
-            icon={<AddIcon />}
-            onClick={handleListItemButtonClick}
-          />
+          >
+            {!isEdit ? (
+              <IconButton
+                height={75}
+                width={75}
+                isRound={true}
+                colorScheme="twitter"
+                aria-label="Add"
+                fontSize="30px"
+                icon={<AddIcon />}
+                onClick={handleListItemButtonClick}
+              />
+            ) : (
+              <IconButton
+                height={75}
+                width={75}
+                isRound={true}
+                colorScheme="red"
+                aria-label="Delete"
+                fontSize="30px"
+                icon={<CloseIcon />}
+                onClick={() => {}}
+              />
+            )}
+          </ButtonGroup>
           <Map
             newAddedItem={newAddedItem}
             setNewAddedItem={setNewAddedItem}
