@@ -5,7 +5,9 @@ import { UserAuth } from "../../context/AuthContext";
 import DataContext from "../../context/DataContext";
 
 import { Spinner, useToast } from "@chakra-ui/react";
+import { AddIcon } from "@chakra-ui/icons";
 import {
+  IconButton,
   Input,
   InputGroup,
   InputLeftAddon,
@@ -61,6 +63,14 @@ export default function Home() {
   const toast = useToast();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  // CREATE MODAL
+  const {
+    isOpen: isOpenCreateModal,
+    onOpen: onOpenCreateModal,
+    onClose: onCloseCreateModal,
+  } = useDisclosure();
+
   const {
     isOpen: isResultsBarOpen,
     onOpen: onResultsBarOpen,
@@ -167,6 +177,17 @@ export default function Home() {
     const dateA = new Date(a.date);
     const dateB = new Date(b.date);
     return dateB - dateA;
+  };
+
+  // Define the callback function to handle a 'List an item' button click
+  const handleListItemButtonClick = () => {
+    if (user) {
+      onOpenCreateModal();
+      setNewAddedItem((prev) => ({ ...prev, islost: true }));
+      setIsEdit(!isEdit);
+    } else {
+      onLoginModalOpen();
+    }
   };
 
   // Sort the array by date
@@ -407,6 +428,9 @@ export default function Home() {
 
           <Flex display={{ base: "none", md: "block" }}>
             <CreateModal
+              isOpen={isOpenCreateModal}
+              onOpen={onOpenCreateModal}
+              onClose={onCloseCreateModal}
               setIsCreate={setIsCreate}
               isCreate={isCreate}
               isEdit={isEdit}
@@ -581,7 +605,23 @@ export default function Home() {
             </Flex>
           )}
         </Flex>
+
         <Flex position="absolute">
+          <IconButton
+            position="absolute"
+            right="10"
+            bottom="10"
+            height={75}
+            width={75}
+            zIndex={1000}
+            isRound={true}
+            variant="solid"
+            colorScheme="twitter"
+            aria-label="Add"
+            fontSize="30px"
+            icon={<AddIcon />}
+            onClick={handleListItemButtonClick}
+          />
           <Map
             newAddedItem={newAddedItem}
             setNewAddedItem={setNewAddedItem}

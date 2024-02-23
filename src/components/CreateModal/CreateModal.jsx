@@ -43,6 +43,9 @@ import TypeSelector from "../TypeSelector/TypeSelector";
 import LostFoundSwitch from "./LostFoundSwitch";
 
 export default function CreateModal({
+  isOpen,
+  onOpen,
+  onClose,
   newAddedItem,
   setNewAddedItem,
   setIsCreate,
@@ -57,7 +60,6 @@ export default function CreateModal({
 }) {
   const { user } = UserAuth();
   const { onLoginModalOpen } = useContext(DataContext);
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const [isLoading, setIsLoading] = useState(false);
 
   const uploadFile = useCallback(() => {
