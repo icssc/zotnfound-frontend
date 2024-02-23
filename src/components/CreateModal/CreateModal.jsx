@@ -59,7 +59,6 @@ export default function CreateModal({
   upload,
 }) {
   const { user } = UserAuth();
-  const { onLoginModalOpen } = useContext(DataContext);
   const [isLoading, setIsLoading] = useState(false);
 
   const uploadFile = useCallback(() => {
@@ -102,70 +101,6 @@ export default function CreateModal({
     index: 0,
     count: steps.length,
   });
-
-  // Define the callback function to handle a 'List an item' button click
-  const handleListItemButtonClick = useCallback(() => {
-    if (user) {
-      onOpen();
-      setNewAddedItem((prev) => ({ ...prev, islost: true }));
-      setIsEdit(!isEdit);
-    } else {
-      onLoginModalOpen();
-    }
-  }, [user, onOpen, onLoginModalOpen, setNewAddedItem, isEdit, setIsEdit]);
-
-  // Define the JSX for the 'List an item' button
-  const listItemButton = (
-    <Button
-      // h={{ base: "10vh", md: "7vh" }}
-      // w={{ base: "40vw", md: "" }}
-      boxShadow="xl"
-      _hover={{ bg: "#b4dbd9" }}
-      backgroundColor="#33b249"
-      color="white"
-      fontSize="xl"
-      fontWeight="bold"
-      borderRadius={30}
-      size={"lg"}
-      paddingY={{ base: 10, md: 8 }}
-      onClick={handleListItemButtonClick}
-    >
-      <Text>List an item</Text>
-    </Button>
-  );
-
-  // Define the JSX for the 'Cancel (listing an item)' button
-  const cancelListItemButton = (
-    <Button
-      h={{ base: "8vh", md: "7vh" }}
-      w={{ base: "40vw", md: "8vw" }}
-      _hover={{ bg: "#F4C2C2" }}
-      backgroundColor="#B31B1B"
-      color="white"
-      fontSize="xl"
-      fontWeight="bold"
-      borderRadius={20}
-      onClick={() => {
-        setNewAddedItem({
-          image: "",
-          type: "",
-          islost: true,
-          name: "",
-          description: "",
-          itemdate: "",
-          isresolved: false,
-          ishelped: null,
-        });
-        setUploadImg("");
-        setActiveStep(0);
-        setIsCreate(true);
-        setIsEdit(false);
-        onClose();
-      }}
-    >
-      Cancel
-    </Button>
-  );
 
   // Define the JSX for the loading animation while an image is uploading
   const loadingAnimation = (
@@ -343,7 +278,6 @@ export default function CreateModal({
 
   return (
     <>
-      {isCreate ? listItemButton : cancelListItemButton}
       <Modal
         isOpen={isOpen}
         onClose={() => {

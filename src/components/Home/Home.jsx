@@ -622,7 +622,7 @@ export default function Home() {
                 width={75}
                 isRound={true}
                 colorScheme="twitter"
-                aria-label="Add"
+                aria-label="Add Item"
                 fontSize="30px"
                 icon={<AddIcon />}
                 onClick={handleListItemButtonClick}
@@ -633,10 +633,25 @@ export default function Home() {
                 width={75}
                 isRound={true}
                 colorScheme="red"
-                aria-label="Delete"
+                aria-label="Cancel Adding Item"
                 fontSize="30px"
                 icon={<CloseIcon />}
-                onClick={() => {}}
+                onClick={() => {
+                  setNewAddedItem({
+                    image: "",
+                    type: "",
+                    islost: true,
+                    name: "",
+                    description: "",
+                    itemdate: "",
+                    isresolved: false,
+                    ishelped: null,
+                  });
+                  setUploadImg("");
+                  setIsCreate(true);
+                  setIsEdit(false);
+                  onClose();
+                }}
               />
             )}
           </ButtonGroup>
