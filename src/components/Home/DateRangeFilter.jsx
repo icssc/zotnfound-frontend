@@ -21,13 +21,14 @@ export default function DateRangeFilter() {
         as={Button}
         rightIcon={<ChevronDownIcon />}
         backgroundColor="white"
+        colorScheme="twitter"
         variant="outline"
-        boxShadow="7px 7px 14px #666666,
-                -7px -7px 14px #ffffff;"
+        boxShadow="5px 2px 9px rgba(0, 0, 0, 0.3);"
         color="#74a2fa"
         fontSize={{ base: "xl", md: "2xl" }}
         size="lg"
         // gap={2}
+        borderWidth={2}
         borderRadius={"lg"}
       >
         {DateRangeFilter}
