@@ -10,6 +10,7 @@ import {
   InputGroup,
   InputLeftAddon,
   Button,
+  ButtonGroup,
   Flex,
   HStack,
   Text,
@@ -475,22 +476,28 @@ export default function Home() {
             </Flex>
           ) : (
             <Flex gap="4">
-              <Button
-                backgroundColor="white"
-                colorScheme="twitter"
+              <ButtonGroup
                 variant="outline"
-                boxShadow="5px 2px 9px rgba(0, 0, 0, 0.3);"
+                colorScheme="twitter"
                 color="#74a2fa"
-                onClick={onOpen}
-                fontSize={{ base: "xl", md: "2xl" }}
-                size="lg"
-                gap={2}
-                borderRadius={"lg"}
-                borderWidth={2}
-                leftIcon={<SettingsIcon />}
+                spacing={6}
+                boxShadow="5px 2px 9px rgba(0, 0, 0, 0.2);"
               >
-                Filter
-              </Button>
+                <Button
+                  backgroundColor="white"
+                  onClick={onOpen}
+                  size="lg"
+                  gap={2}
+                  fontSize={{ base: "xl", md: "2xl" }}
+                  borderRadius={"lg"}
+                  borderWidth={2}
+                  leftIcon={<SettingsIcon />}
+                >
+                  Filter
+                </Button>
+                <DateRangeFilter />
+              </ButtonGroup>
+
               <Filter
                 setFindFilter={setFindFilter}
                 findFilter={findFilter}
@@ -498,8 +505,6 @@ export default function Home() {
                 isOpen={isOpen}
                 onClose={onClose}
               />
-
-              <DateRangeFilter />
 
               <Button
                 display={{ md: "none" }}
