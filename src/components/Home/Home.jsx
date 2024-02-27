@@ -38,6 +38,7 @@ import { SettingsIcon, StarIcon } from "@chakra-ui/icons";
 import upload from "../../assets/images/download.png";
 
 import logout from "../../assets/logos/logout.svg";
+import subscribe from "../../assets/logos/subscribe.svg";
 import unsubscribe from "../../assets/logos/unsubscribe.svg";
 import userlogo from "../../assets/logos/userlogo.svg";
 import yourposts from "../../assets/logos/yourposts.svg";
@@ -59,6 +60,9 @@ export default function Home() {
   const [leaderboard, setLeaderboard] = useState([]);
   const { user, logOut } = UserAuth();
   const [token, setToken] = useState("");
+
+  const [subscription, setSubscription] = useState(false);
+
   const btnRef = useRef();
 
   const toast = useToast();
@@ -132,14 +136,14 @@ export default function Home() {
     onClose: onLoginModalClose,
   } = useDisclosure();
 
-  const unsubscribeEmail = async (e) => {
+  const subscribeToggle = async (e) => {
     e.preventDefault();
     try {
       const result = await axios.patch(
         `${process.env.REACT_APP_AWS_BACKEND_URL}/leaderboard/changeSubscription`,
         {
           email: user.email,
-          subscription: false,
+          subscription: subscription,
         },
         {
           headers: {
@@ -147,9 +151,11 @@ export default function Home() {
           },
         }
       );
-      console.log(result);
+      setSubscription(!subscription);
       toast({
-        title: "Succesfully Unsubscribed!",
+        title: subscription
+          ? "Succesfully Subscribed!"
+          : "Succesfully Unsubscribed!", // just switched subscription
         description: "You have been unsubscribed from the ZotNFound Newsletter",
         status: "success",
         duration: 5000,
@@ -224,7 +230,7 @@ export default function Home() {
     const getLeaderboard = async () => {
       try {
         const { data: leaderboardData } = await axios.get(
-          `${process.env.REACT_APP_AWS_BACKEND_URL}/leaderboard/`
+          `${process.env.REACT_APP_AWS_BACKEND_URL}/leaderboard`
         );
         setLeaderboard(
           leaderboardData.map((item) => ({ ...item, id: item.id }))
@@ -233,6 +239,10 @@ export default function Home() {
         const userEmailExists = leaderboardData.some(
           (entry) => entry.email === user?.email
         );
+        const userSubscription = leaderboardData.some(
+          (entry) => entry.subscription === true
+        );
+        setSubscription(userSubscription);
         // If it does not exist, add the user to the leaderboard
         if (!userEmailExists && user) {
           // added user to prevent race condition (user is undefined before auth resolves)
@@ -250,7 +260,7 @@ export default function Home() {
           );
           // Fetch the leaderboard again after insertion
           const { data: updatedLeaderboardData } = await axios.get(
-            `${process.env.REACT_APP_AWS_BACKEND_URL}/leaderboard/`
+            `${process.env.REACT_APP_AWS_BACKEND_URL}/leaderboard`
           );
           setLeaderboard(
             updatedLeaderboardData.map((item) => ({ ...item, id: item.id }))
@@ -392,14 +402,28 @@ export default function Home() {
                     Your Posts
                   </MenuItem>
 
-                  <MenuItem onClick={unsubscribeEmail}>
-                    <Image
-                      boxSize="1.2rem"
-                      src={unsubscribe}
-                      alt="unsubscribe from newsletter button"
-                      mr="12px"
-                    />
-                    Unsubscribe
+                  <MenuItem onClick={subscribeToggle}>
+                    {subscription ? (
+                      <>
+                        <Image
+                          boxSize="1.2rem"
+                          src={subscribe}
+                          alt="unsubscribe from newsletter button"
+                          mr="12px"
+                        />
+                        Subscribe
+                      </>
+                    ) : (
+                      <>
+                        <Image
+                          boxSize="1.2rem"
+                          src={unsubscribe}
+                          alt="unsubscribe from newsletter button"
+                          mr="12px"
+                        />
+                        Unsubscribe
+                      </>
+                    )}
                   </MenuItem>
 
                   <MenuItem onClick={handleLogout}>
