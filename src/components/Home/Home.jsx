@@ -131,7 +131,7 @@ export default function Home() {
         `${process.env.REACT_APP_AWS_BACKEND_URL}/leaderboard/changeSubscription`,
         {
           email: user.email,
-          subscription: !subscription,
+          subscription: subscription,
         },
         {
           headers: {
@@ -141,7 +141,7 @@ export default function Home() {
       );
       setSubscription(!subscription);
       toast({
-        title: subscribe
+        title: subscription
           ? "Succesfully Subscribed!"
           : "Succesfully Unsubscribed!", // just switched subscription
         description: "You have been unsubscribed from the ZotNFound Newsletter",
