@@ -12,7 +12,7 @@ import {
 } from "../../utils/HomeUtils";
 
 export default function DateRangeFilter() {
-  const [DateRangeFilter, setDateRangeFilter] = useState("Date Range Filter");
+  const [DateRangeFilter, setDateRangeFilter] = useState("Date Range");
   const { setLoading, setData } = useContext(DataContext);
 
   return (

@@ -527,15 +527,15 @@ export default function Home() {
               <ButtonGroup
                 variant="outline"
                 colorScheme="twitter"
-                color="#74a2fa"
-                spacing={6}
+                color="#5f85cf"
+                spacing={3}
                 boxShadow="5px 2px 9px rgba(0, 0, 0, 0.2);"
               >
                 <Button
                   backgroundColor="white"
                   onClick={onOpen}
                   size="lg"
-                  gap={2}
+                  gap={1}
                   fontSize={{ base: "xl", md: "2xl" }}
                   borderRadius={"lg"}
                   borderWidth={2}
