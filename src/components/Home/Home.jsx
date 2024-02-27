@@ -6,6 +6,7 @@ import ResultsBar from "../ResultsBar/ResultsBar";
 import CreateModal from "../CreateModal/CreateModal";
 import LoginModal from "../LoginModal/LoginModal";
 import Leaderboard from "./Leaderboard";
+import UpdatesModal from "../UpdatesModal/UpdatesModal";
 
 import instagram from "../../assets/logos/instagram.svg";
 import { UserAuth } from "../../context/AuthContext";
@@ -252,6 +253,8 @@ export default function Home() {
             >
               ZotnFound
             </MenuButton>
+
+            <UpdatesModal />  
 
             <MenuList zIndex={10000}>
               <MenuItem
