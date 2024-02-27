@@ -139,11 +139,11 @@ export default function Home() {
   const subscribeToggle = async (e) => {
     e.preventDefault();
     try {
-      const result = await axios.patch(
+      await axios.patch(
         `${process.env.REACT_APP_AWS_BACKEND_URL}/leaderboard/changeSubscription`,
         {
           email: user.email,
-          subscription: subscription,
+          subscription: !subscription,
         },
         {
           headers: {
@@ -154,9 +154,11 @@ export default function Home() {
       setSubscription(!subscription);
       toast({
         title: subscription
-          ? "Succesfully Subscribed!"
-          : "Succesfully Unsubscribed!", // just switched subscription
-        description: "You have been unsubscribed from the ZotNFound Newsletter",
+          ? "Succesfully Unsubscribed!"
+          : "Succesfully Subscribed!", // just switched subscription
+        description: subscription
+          ? "You have been unsubscribed from the ZotNFound Newsletter"
+          : "You have been subscribed to the ZotNFound Newsletter",
         status: "success",
         duration: 5000,
         isClosable: true,
@@ -239,10 +241,6 @@ export default function Home() {
         const userEmailExists = leaderboardData.some(
           (entry) => entry.email === user?.email
         );
-        const userSubscription = leaderboardData.some(
-          (entry) => entry.subscription === true
-        );
-        setSubscription(userSubscription);
         // If it does not exist, add the user to the leaderboard
         if (!userEmailExists && user) {
           // added user to prevent race condition (user is undefined before auth resolves)
@@ -275,6 +273,7 @@ export default function Home() {
 
     if (user) {
       getLeaderboard();
+      setSubscription(user.subscription);
     }
   }, [user, token]);
 
@@ -407,21 +406,21 @@ export default function Home() {
                       <>
                         <Image
                           boxSize="1.2rem"
-                          src={subscribe}
-                          alt="unsubscribe from newsletter button"
+                          src={unsubscribe}
+                          alt="Unsubscribe from newsletter button"
                           mr="12px"
                         />
-                        Subscribe
+                        Unsubscribe
                       </>
                     ) : (
                       <>
                         <Image
                           boxSize="1.2rem"
-                          src={unsubscribe}
-                          alt="unsubscribe from newsletter button"
+                          src={subscribe}
+                          alt="Subscribe from newsletter button"
                           mr="12px"
                         />
-                        Unsubscribe
+                        Subscribe
                       </>
                     )}
                   </MenuItem>

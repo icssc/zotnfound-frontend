@@ -1,12 +1,11 @@
 import * as React from "react";
-import { useState, useContext, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   Image,
   Button,
   Flex,
   FormLabel,
   Input,
-  useDisclosure,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -30,8 +29,6 @@ import {
 // import logo from "../../assets/images/small_logo.png";
 import { storage } from "../../firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { UserAuth } from "../../context/AuthContext";
-import DataContext from "../../context/DataContext";
 import { MdDriveFileRenameOutline, MdOutlineDescription } from "react-icons/md";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { SlCalender } from "react-icons/sl";
@@ -58,7 +55,6 @@ export default function CreateModal({
   uploadImg,
   upload,
 }) {
-  const { user } = UserAuth();
   const [isLoading, setIsLoading] = useState(false);
 
   const uploadFile = useCallback(() => {
