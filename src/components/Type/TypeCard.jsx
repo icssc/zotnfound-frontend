@@ -19,8 +19,8 @@ export default function TypeCard({
       backgroundColor={newAddedItem.type === type ? "#787092" : "white"}
       variant="outline"
       border="5px rgb(166, 152, 216) solid"
-      minW={{ md: "7vw", base: "13vh" }}
-      minH={{ md: "7vw", base: "13vh" }}
+      minW={{ md: "10vw", base: "13vh" }}
+      minH={{ md: "8vw", base: "13vh" }}
       borderRadius="20px"
       alignItems={"center"}
       justifyContent={"center"}
