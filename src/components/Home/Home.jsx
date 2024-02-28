@@ -5,9 +5,8 @@ import { UserAuth } from "../../context/AuthContext";
 import DataContext from "../../context/DataContext";
 
 import { Spinner, useToast } from "@chakra-ui/react";
-import { AddIcon, CloseIcon } from "@chakra-ui/icons";
+
 import {
-  IconButton,
   Input,
   InputGroup,
   InputLeftAddon,
@@ -53,6 +52,7 @@ import LoginModal from "../LoginModal/LoginModal";
 import Leaderboard from "./Leaderboard";
 import ZotNFoundLogoText from "./ZotNFoundLogoText";
 import DateRangeFilter from "./DateRangeFilter";
+import ListItemButton from "./ListItemButton";
 
 export default function Home() {
   const [search, setSearch] = useState("");
@@ -198,6 +198,23 @@ export default function Home() {
     } else {
       onLoginModalOpen();
     }
+  };
+
+  const handleCancelItemButtonClick = () => {
+    setNewAddedItem({
+      image: "",
+      type: "",
+      islost: true,
+      name: "",
+      description: "",
+      itemdate: "",
+      isresolved: false,
+      ishelped: null,
+    });
+    setUploadImg("");
+    setIsCreate(true);
+    setIsEdit(false);
+    onClose();
   };
 
   // Sort the array by date
@@ -637,52 +654,16 @@ export default function Home() {
         </Flex>
 
         <Flex position="absolute">
-          <ButtonGroup
+          <ListItemButton
+            switchState={!isEdit}
+            addCallback={handleListItemButtonClick}
+            cancelCallback={handleCancelItemButtonClick}
             position="absolute"
-            right="10"
-            bottom="10"
+            right={10}
+            bottom={10}
             zIndex={1000}
             variant="solid"
-          >
-            {!isEdit ? (
-              <IconButton
-                height={75}
-                width={75}
-                isRound={true}
-                colorScheme="twitter"
-                aria-label="Add Item"
-                fontSize="30px"
-                icon={<AddIcon />}
-                onClick={handleListItemButtonClick}
-              />
-            ) : (
-              <IconButton
-                height={75}
-                width={75}
-                isRound={true}
-                colorScheme="red"
-                aria-label="Cancel Adding Item"
-                fontSize="30px"
-                icon={<CloseIcon />}
-                onClick={() => {
-                  setNewAddedItem({
-                    image: "",
-                    type: "",
-                    islost: true,
-                    name: "",
-                    description: "",
-                    itemdate: "",
-                    isresolved: false,
-                    ishelped: null,
-                  });
-                  setUploadImg("");
-                  setIsCreate(true);
-                  setIsEdit(false);
-                  onClose();
-                }}
-              />
-            )}
-          </ButtonGroup>
+          />
           <Map
             newAddedItem={newAddedItem}
             setNewAddedItem={setNewAddedItem}
