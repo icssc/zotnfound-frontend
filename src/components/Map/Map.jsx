@@ -320,6 +320,7 @@ export default function Map({
   return (
     <div>
       <MapContainer
+        style={{ border: "3px dotted black" }}
         className="map-container"
         center={centerPosition}
         zoom={17}
