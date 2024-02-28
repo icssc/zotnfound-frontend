@@ -58,7 +58,14 @@ const ResultCard = React.memo(
     );
     return (
       <>
-        <Card maxW="lg" align={"center"} mb="10px">
+        <Card
+          bg="gray.50"
+          border="1px"
+          borderColor="gray.300"
+          maxW="lg"
+          align={"center"}
+          mb="10px"
+        >
           <CardBody>
             <Flex justifyContent={"center"} alignItems={"center"}>
               {props.isresolved && (
@@ -79,7 +86,13 @@ const ResultCard = React.memo(
                   </Text>
                 </Flex>
               )}
-              <Image rounded={"lg"} src={props.image} loading="lazy" />
+              <Image
+                border="1px"
+                borderColor="gray.300"
+                rounded={"lg"}
+                src={props.image}
+                loading="lazy"
+              />
             </Flex>
             <Stack mt="6" spacing="3">
               <Flex justifyContent={"space-between"}>
@@ -96,11 +109,11 @@ const ResultCard = React.memo(
           <CardFooter>
             <Flex justifyContent={"space-between"}>
               <Button
-                variant="ghost"
+                variant="outline"
                 colorScheme="blue"
                 leftIcon={<InfoIcon />}
                 size="md"
-                w="20"
+                w="60%"
                 onClick={infoModalDisclosure.onOpen}
               >
                 View
