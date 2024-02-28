@@ -9,7 +9,7 @@ export default function ListItemButton({
   ...props
 }) {
   return (
-    <ButtonGroup {...props}>
+    <ButtonGroup {...props} zIndex={1000} variant="solid">
       <Tooltip
         label={switchState ? "Make Post" : "Cancel Post"}
         aria-label="Item Tooltip"

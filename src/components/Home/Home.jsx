@@ -661,8 +661,6 @@ export default function Home() {
             position="absolute"
             right={10}
             bottom={10}
-            zIndex={1000}
-            variant="solid"
           />
           <Map
             newAddedItem={newAddedItem}
