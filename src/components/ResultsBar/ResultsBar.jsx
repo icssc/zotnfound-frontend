@@ -54,6 +54,7 @@ export default function ResultsBar({
           _hover={{
             transform: "scale(0.99)",
           }}
+          transition="transform .3s ease"
         >
           <ResultCard
             props={item}
