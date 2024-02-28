@@ -319,6 +319,7 @@ export default function Map({
 
   return (
     <div>
+      {/* Styles applied to MapContainer don't render unless page is reloaded */}
       <MapContainer
         style={{ border: "3px dotted black" }}
         className="map-container"
