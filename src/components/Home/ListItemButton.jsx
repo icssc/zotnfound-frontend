@@ -1,7 +1,6 @@
 import { AddIcon, CloseIcon } from "@chakra-ui/icons";
 
 import { IconButton, Tooltip, ButtonGroup } from "@chakra-ui/react";
-import { useEffect } from "react";
 
 export default function ListItemButton({
   switchState,
@@ -11,14 +10,16 @@ export default function ListItemButton({
 }) {
   return (
     <ButtonGroup {...props}>
-      {switchState ? (
-        <Tooltip
-          label="Make Post"
-          aria-label="Add Item Tooltip"
-          placement="top"
-          openDelay={300}
-          fontSize="xl"
-        >
+      <Tooltip
+        label={switchState ? "Make Post" : "Cancel Post"}
+        aria-label="Item Tooltip"
+        placement="top"
+        openDelay={500}
+        closeOnClick
+        closeOnPointerDown
+        fontSize="xl"
+      >
+        {switchState ? (
           <IconButton
             height={75}
             width={75}
@@ -29,15 +30,7 @@ export default function ListItemButton({
             icon={<AddIcon />}
             onClick={addCallback}
           />
-        </Tooltip>
-      ) : (
-        <Tooltip
-          label="Cancel Post"
-          aria-label="Cancel Item Tooltip"
-          placement="top"
-          openDelay={300}
-          fontSize="xl"
-        >
+        ) : (
           <IconButton
             height={75}
             width={75}
@@ -48,8 +41,8 @@ export default function ListItemButton({
             icon={<CloseIcon />}
             onClick={cancelCallback}
           />
-        </Tooltip>
-      )}
+        )}
+      </Tooltip>
     </ButtonGroup>
   );
 }
