@@ -4,6 +4,8 @@ import ResultCard from "../ResultCard/ResultCard";
 import { Box, Flex, Text } from "@chakra-ui/react";
 import DataContext from "../../context/DataContext";
 import { UserAuth } from "../../context/AuthContext";
+import Fuse from 'fuse.js'
+
 export default function ResultsBar({
   search,
   findFilter,
@@ -15,11 +17,11 @@ export default function ResultsBar({
   const { user } = UserAuth();
 
   // Define callback function to return filtered items (filtered according to search bar and filter markers)
+  
+
   const filterItem = useCallback(
-    (item) => {
+    ({item}) => {
       return (
-        (search.toLowerCase() === "" ||
-          item.name.toLowerCase().includes(search)) &&
         (findFilter.islost === item.islost ||
           findFilter.isFound === !item.islost) &&
         (findFilter.type === "everything" || findFilter.type === item.type) &&
@@ -31,20 +33,20 @@ export default function ResultsBar({
       );
     },
     [
-      search,
       findFilter.isFound,
       findFilter.isShowReturned,
       findFilter.isYourPosts,
       findFilter.islost,
       findFilter.type,
       findFilter.uploadDate,
-      user,
+      user
     ]
   );
 
+  
   // Define callback function to display filtered items as individual result cards in the results bar
   const mapItem = useCallback(
-    (item) => {
+    ({item}) => {
       return (
         <Box
           key={item.location}
@@ -66,8 +68,14 @@ export default function ResultsBar({
     },
     [setFocusLocation, onResultsBarClose, setData, setLeaderboard]
   );
+  
+  const searchItemsOptions = {
+    keys: ['name', 'type', 'description']
+  }
+  const fuse = new Fuse(data, searchItemsOptions)
+  const results = fuse.search(search)
+  const allResults = results.filter(filterItem).map(mapItem);
 
-  const allResults = data.filter(filterItem).map(mapItem);
 
   // Define JSX for empty results bar (no result cards)
   const noResults = (

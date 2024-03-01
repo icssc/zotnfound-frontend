@@ -89,6 +89,8 @@ export default function Home() {
     onClose: onLeaderboardClose,
   } = useDisclosure();
 
+  
+
   const [findFilter, setFindFilter] = useState({
     type: "everything",
     isFound: true,
