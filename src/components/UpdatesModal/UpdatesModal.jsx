@@ -1,4 +1,4 @@
-import { useDisclosure } from "@chakra-ui/hooks"
+import { useCallback, useState} from "react";
 import {
     Modal,
     ModalOverlay,
@@ -9,28 +9,36 @@ import {
     ModalCloseButton,
     Button
   } from '@chakra-ui/react'
+  
+export const latestUpdate = '20240302';
+export const lastUpdateSeen = 'none'; // latest update seen by user
 
+function needsUpdate() {
+  return localStorage.getItem(lastUpdateSeen) != latestUpdate;
+}
 
 export default function UpdatesModal() {
-    const { isOpen, onOpen, onClose } = useDisclosure()
+  const [isOpen, setOpen] = useState(needsUpdate()); // on page load, display user updates if needed
+
+    const updateKey = useCallback(() => {
+      localStorage.setItem(lastUpdateSeen, latestUpdate); // change date of last update seen by user
+      setOpen(false);
+  }, []);
+
     return (
       <>
-        <Button onClick={onOpen}>Open Modal</Button>
-  
-        <Modal isOpen={isOpen} onClose={onClose}>
+        <Modal isOpen={isOpen} size = {'lg'} onClose={updateKey}>
           <ModalOverlay />
           <ModalContent>
-            <ModalHeader>Modal Title</ModalHeader>
+            <ModalHeader>New Features @ ZotNFound!</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
-              Lorem ipsum
+              [Updates go here]
             </ModalBody>
-  
             <ModalFooter>
-              <Button colorScheme='blue' mr={3} onClick={onClose}>
+              <Button colorScheme='blue' mr={3} onClick={updateKey}>
                 Close
               </Button>
-              <Button variant='ghost'>Secondary Action</Button>
             </ModalFooter>
           </ModalContent>
         </Modal>
