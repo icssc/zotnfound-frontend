@@ -89,6 +89,7 @@ export default function ResultsBar({
   
   // Retrieve all items that meet the filter criteria
   const allResults = data.filter(filterItem).map(mapItem);
+  
   // Display only the first 10 items on the screen, all items if there are less than 10 items left to be loaded
   const viewableResults = allResults.slice(0, Math.min(itemsonScreenLimit, allResults.length));
 
@@ -110,7 +111,7 @@ export default function ResultsBar({
       overflowX={"hidden"}
     >
       {allResults.length > 0 ? viewableResults : noResults}
-      {loadMoreButton}
+      {viewableResults.length < allResults.length && loadMoreButton}
     </Box>
   );
 }
