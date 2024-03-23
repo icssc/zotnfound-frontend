@@ -1,7 +1,7 @@
-import { useContext, useCallback } from "react";
+import { useContext, useCallback, useState } from "react";
 import "./ResultsBar.css";
 import ResultCard from "../ResultCard/ResultCard";
-import { Box, Flex, Text } from "@chakra-ui/react";
+import { Box, Flex, Text, Button } from "@chakra-ui/react";
 import DataContext from "../../context/DataContext";
 import { UserAuth } from "../../context/AuthContext";
 export default function ResultsBar({
@@ -13,6 +13,8 @@ export default function ResultsBar({
 }) {
   const { data, setData } = useContext(DataContext);
   const { user } = UserAuth();
+
+  const [itemsonScreenLimit, setItemsOnScreenLimit] = useState(10);
 
   // Define callback function to return filtered items (filtered according to search bar and filter markers)
   const filterItem = useCallback(
@@ -66,8 +68,29 @@ export default function ResultsBar({
     },
     [setFocusLocation, onResultsBarClose, setData, setLeaderboard]
   );
+  
+  // Callback function that increases the number of items displayed on the screen by 10
+  const handleLoadMore = useCallback(() => { 
+    setItemsOnScreenLimit(itemsonScreenLimit + 10);
+  }, [itemsonScreenLimit]);
 
+  const loadMoreButton = (
+    <Button
+      onClick={handleLoadMore}
+      variant="solid"
+      colorScheme="blue"
+      width="100%"
+      marginTop="10px"
+      marginBottom="10px"
+    >
+      Load More
+    </Button>
+  );
+  
+  // Retrieve all items that meet the filter criteria
   const allResults = data.filter(filterItem).map(mapItem);
+  // Display only the first 10 items on the screen, all items if there are less than 10 items left to be loaded
+  const viewableResults = allResults.slice(0, Math.min(itemsonScreenLimit, allResults.length));
 
   // Define JSX for empty results bar (no result cards)
   const noResults = (
@@ -86,7 +109,8 @@ export default function ResultsBar({
       overflowY="scroll"
       overflowX={"hidden"}
     >
-      {allResults.length > 0 ? allResults : noResults}
+      {allResults.length > 0 ? viewableResults : noResults}
+      {loadMoreButton}
     </Box>
   );
 }
