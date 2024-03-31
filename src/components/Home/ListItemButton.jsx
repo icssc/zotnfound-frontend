@@ -14,7 +14,7 @@ export default function ListItemButton({
         label={switchState ? "Make Post" : "Cancel Post"}
         aria-label="Item Tooltip"
         placement="top"
-        openDelay={500}
+        openDelay={300}
         closeOnClick
         closeOnPointerDown
         fontSize="xl"
@@ -24,7 +24,11 @@ export default function ListItemButton({
             height={75}
             width={75}
             isRound={true}
-            colorScheme="twitter"
+            backgroundColor="#74a2fa"
+            color={"white"}
+            _hover={{
+              background: "#365fad",
+            }}
             aria-label="Add Item"
             fontSize="30px"
             icon={<AddIcon />}

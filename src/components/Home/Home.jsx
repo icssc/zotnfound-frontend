@@ -543,10 +543,10 @@ export default function Home() {
             <Flex gap="4">
               <ButtonGroup
                 variant="outline"
-                colorScheme="twitter"
+                colorScheme="#74a2fa"
                 color="#5f85cf"
                 spacing={3}
-                boxShadow="5px 2px 9px rgba(0, 0, 0, 0.2);"
+                // boxShadow="5px 2px 9px rgba(0, 0, 0, 0.2);"
               >
                 <Button
                   backgroundColor="white"
