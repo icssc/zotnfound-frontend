@@ -48,6 +48,8 @@ import cookie from "../../assets/images/cookie.svg";
 
 import axios from "axios";
 
+import { MdAssignment } from "react-icons/md";
+
 export default function Home() {
   const [search, setSearch] = useState("");
   const [data, setData] = useState([]);
@@ -309,6 +311,15 @@ export default function Home() {
           mr={7}
           gap={{ base: 3, md: 5 }}
         >
+          <Button
+            leftIcon={<MdAssignment />}
+            colorScheme = 'blue'
+            onClick={() => {
+              window.open('https://forms.gle/Uud594N7QE6VbiDY6', '_blank');
+            }}
+            >
+              Feedback
+            </Button>
           {user ? (
             <>
               <Flex
