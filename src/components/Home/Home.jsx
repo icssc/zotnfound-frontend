@@ -383,8 +383,8 @@ export default function Home() {
                 <MenuButton>
                   <Image
                     src={user?.photoURL}
-                    h={{ base: "50px", md: "80px" }}
-                    w={{ base: "50px", md: "80px" }}
+                    h={{ base: "27px", md: "80px" }}
+                    w={{ base: "27px", md: "80px" }}
                     borderRadius="100%"
                   />
                 </MenuButton>
