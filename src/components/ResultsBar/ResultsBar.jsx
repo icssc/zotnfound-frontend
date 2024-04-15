@@ -68,30 +68,35 @@ export default function ResultsBar({
     },
     [setFocusLocation, onResultsBarClose, setData, setLeaderboard]
   );
-  
+
   // Callback function that increases the number of items displayed on the screen by 10
-  const handleLoadMore = useCallback(() => { 
+  const handleLoadMore = useCallback(() => {
     setItemsOnScreenLimit(itemsonScreenLimit + 10);
   }, [itemsonScreenLimit]);
 
   const loadMoreButton = (
     <Button
       onClick={handleLoadMore}
-      variant="solid"
+      variant="outline"
       colorScheme="blue"
       width="100%"
+      height={"80px"}
       marginTop="10px"
       marginBottom="10px"
+      fontSize={"xl"}
     >
       Load More
     </Button>
   );
-  
+
   // Retrieve all items that meet the filter criteria
   const allResults = data.filter(filterItem).map(mapItem);
-  
+
   // Display only the first 10 items on the screen, all items if there are less than 10 items left to be loaded
-  const viewableResults = allResults.slice(0, Math.min(itemsonScreenLimit, allResults.length));
+  const viewableResults = allResults.slice(
+    0,
+    Math.min(itemsonScreenLimit, allResults.length)
+  );
 
   // Define JSX for empty results bar (no result cards)
   const noResults = (
