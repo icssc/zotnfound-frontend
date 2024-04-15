@@ -16,6 +16,7 @@
     "firebase": "^9.23.0",
     "firebase-auth": "^0.1.2",
     "framer-motion": "^10.12.16",
+    "fuse.js": "^7.0.0",
     "ionicons": "^7.1.2",
     "leaflet": "^1.9.4",
     "react": "^18.2.0",
