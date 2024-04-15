@@ -1,7 +1,7 @@
-import { useContext, useCallback } from "react";
+import { useContext, useCallback, useState } from "react";
 import "./ResultsBar.css";
 import ResultCard from "../ResultCard/ResultCard";
-import { Box, Flex, Text } from "@chakra-ui/react";
+import { Box, Flex, Text, Button } from "@chakra-ui/react";
 import DataContext from "../../context/DataContext";
 import { UserAuth } from "../../context/AuthContext";
 import Fuse from "fuse.js";
@@ -16,7 +16,9 @@ export default function ResultsBar({
   const { data, setData } = useContext(DataContext);
   const { user } = UserAuth();
 
-  // Define callback function to return filtered items
+  const [itemsonScreenLimit, setItemsOnScreenLimit] = useState(10);
+
+  // Define callback function to return filtered items (filtered according to search bar and filter markers)
   const filterItem = useCallback(
     (item) => {
       return (
@@ -68,6 +70,35 @@ export default function ResultsBar({
       ? data.filter(filterItem).map(mapItem)
       : results.filter(filterItem).map(mapItem);
 
+  // Callback function that increases the number of items displayed on the screen by 10
+  const handleLoadMore = useCallback(() => {
+    setItemsOnScreenLimit(itemsonScreenLimit + 10);
+  }, [itemsonScreenLimit]);
+
+  const loadMoreButton = (
+    <Button
+      onClick={handleLoadMore}
+      variant="outline"
+      colorScheme="blue"
+      width="100%"
+      height={"80px"}
+      marginTop="10px"
+      marginBottom="10px"
+      fontSize={"xl"}
+    >
+      Load More
+    </Button>
+  );
+
+  // Retrieve all items that meet the filter criteria
+
+  // Display only the first 10 items on the screen, all items if there are less than 10 items left to be loaded
+  const viewableResults = allResults.slice(
+    0,
+    Math.min(itemsonScreenLimit, allResults.length)
+  );
+
+  // Define JSX for empty results bar (no result cards)
   const noResults = (
     <Flex height="80%" width="100%" justifyContent="center" alignItems="center">
       <Text fontSize="4xl" as="b" color="gray">
@@ -84,7 +115,8 @@ export default function ResultsBar({
       overflowY="scroll"
       overflowX="hidden"
     >
-      {allResults.length > 0 ? allResults : noResults}
+      {allResults.length > 0 ? viewableResults : noResults}
+      {viewableResults.length < allResults.length && loadMoreButton}
     </Box>
   );
 }
