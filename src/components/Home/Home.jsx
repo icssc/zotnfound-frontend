@@ -329,7 +329,7 @@ export default function Home() {
           w={{ base: "100%", md: "40%" }}
           display={{ base: "none", md: "block" }}
         >
-          <InputGroup mt="1%" size={{ base: "md", md: "lg" }} mb="1%">
+          <InputGroup mt="1%" size={{ base: "md", md: "lg" }} mb="1%" padding={8}>
             <InputLeftAddon children="🔎" />
             <Input
               type="teal"
@@ -394,8 +394,8 @@ export default function Home() {
                 <MenuButton>
                   <Image
                     src={user?.photoURL}
-                    h={{ base: "50px", md: "80px" }}
-                    w={{ base: "50px", md: "80px" }}
+                    h={{ base: "27px", md: "80px" }}
+                    w={{ base: "27px", md: "80px" }}
                     borderRadius="100%"
                   />
                 </MenuButton>
