@@ -1,10 +1,18 @@
-import { useState, useRef, useMemo, useContext, useEffect } from "react";
+import {
+  useState,
+  useRef,
+  useMemo,
+  useContext,
+  useEffect,
+  useCallback,
+} from "react";
 // import { useMapEvents } from "react-leaflet/hooks";
 // import mapuser from "../../assets/logos/mapuser.svg";
 import "./Map.css";
 
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import Fuse from "fuse.js";
 
 import { othersDrag, flyImg, iconsMap } from "./MapIcons";
 import {
@@ -107,41 +115,52 @@ export default function Map({
     }
   }, [focusLocation, setFocusLocation]);
 
-  const allMarkers = data
-    .filter((item) => {
+  const fuseOptions = {
+    keys: ["name", "description"],
+    threshold: 0.3,
+    includeScore: true,
+  };
+
+  const fuse = new Fuse(data, fuseOptions);
+  const results = fuse.search(search).map((result) => result.item);
+
+  const filterItem = useCallback(
+    (item) => {
       return (
-        (search.toLowerCase() === "" ||
-          item.name.toLowerCase().includes(search)) &&
-        (findFilter.islost === item.islost ||
-          findFilter.isFound === !item.islost) &&
-        (findFilter.type === "everything" || findFilter.type === item.type) &&
-        (findFilter.uploadDate === "" ||
-          (item.itemdate && item.itemdate.includes(findFilter.uploadDate))) &&
-        (!findFilter.isYourPosts ||
-          (findFilter.isYourPosts && item.email === user.email)) &&
-        (findFilter.isShowReturned || !item.isresolved)
+        search.toLowerCase() === "" ||
+        (((findFilter.isLost && item.isLost) ||
+          (findFilter.isFound && !item.isLost)) &&
+          (findFilter.type === "everything" || findFilter.type === item.type) &&
+          (findFilter.uploadDate === "" ||
+            (item.itemDate && item.itemDate.includes(findFilter.uploadDate))) &&
+          (!findFilter.isYourPosts || item.email === user.email) &&
+          (findFilter.isShowReturned || !item.isResolved))
       );
-    })
-    .map((item) => {
-      return (
-        <Marker
-          key={item.location}
-          position={item.location}
-          eventHandlers={{
-            click: () => {
-              onOpen();
-              setItemData(item);
-              setFocusLocation(item.location);
-            },
-          }}
-          icon={
-            item.isresolved
-              ? iconsMap["resolved"][item.islost]
-              : (iconsMap[item.type] || iconsMap["others"])[item.islost]
-          }
-        ></Marker>
-      );
-    });
+    },
+    [search, findFilter, user]
+  );
+
+  const markersData = results.length > 0 ? results : data;
+  const allMarkers = markersData.filter(filterItem).map((item) => {
+    return (
+      <Marker
+        key={item.location}
+        position={item.location}
+        eventHandlers={{
+          click: () => {
+            onOpen();
+            setItemData(item);
+            setFocusLocation(item.location);
+          },
+        }}
+        icon={
+          item.isresolved
+            ? iconsMap["resolved"][item.islost]
+            : (iconsMap[item.type] || iconsMap["others"])[item.islost]
+        }
+      ></Marker>
+    );
+  });
 
   // moves map when focusLocation state changes
   function MapFocusLocation({ location }) {
